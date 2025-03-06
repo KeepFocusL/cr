@@ -35,6 +35,11 @@
             <!-- 如果 optional=true 即使其他模块依赖了 common 模块，这个依赖也不会被自动传递，有需要的子模块需显式声明 -->
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
     </dependencies>
 
 </project>
