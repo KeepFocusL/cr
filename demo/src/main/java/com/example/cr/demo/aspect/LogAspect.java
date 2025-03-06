@@ -1,11 +1,9 @@
-package com.example.cr.user.aspect;
+package com.example.cr.demo.aspect;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.servlet.http.HttpServletRequest;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.util.*;
 
 @Aspect
