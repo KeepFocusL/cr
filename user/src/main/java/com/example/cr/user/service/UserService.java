@@ -11,6 +11,6 @@ public class UserService {
     UserMapper userMapper;
 
     public long count(){
-        return userMapper.count();
+        return userMapper.countByExample(null);
     }
 }
