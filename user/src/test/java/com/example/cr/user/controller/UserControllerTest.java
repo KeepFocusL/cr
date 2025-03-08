@@ -2,6 +2,8 @@ package com.example.cr.user.controller;
 
 import com.example.cr.user.entity.User;
 import com.example.cr.user.mapper.UserMapper;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +24,21 @@ public class UserControllerTest {
     @Autowired
     UserMapper userMapper;
 
+    @BeforeEach
+    void before(){
+        // 0、删除数据库的所有内容
+        userMapper.deleteByExample(null);
+    }
+
+    @AfterEach
+    void after(){
+        // 0、删除数据库的所有内容
+        userMapper.deleteByExample(null);
+    }
+
     @Test
     void count() throws Exception {
         // Arrange/Act/Assert 或者 Given/When/Then
-        // 0、删除数据库的所有内容
-        userMapper.deleteByExample(null);
 
         // 1、做准备 准备 10 条数据
         int number = 8;
