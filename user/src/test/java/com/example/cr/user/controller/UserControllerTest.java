@@ -2,11 +2,14 @@ package com.example.cr.user.controller;
 
 import com.example.cr.user.entity.User;
 import com.example.cr.user.mapper.UserMapper;
+import com.example.cr.user.request.UserRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,6 +26,9 @@ public class UserControllerTest {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @BeforeEach
     void before(){
@@ -61,10 +67,16 @@ public class UserControllerTest {
     @Test
     void register() throws Exception {
         // 1、准备
+        String mobile = "123456789";
+
+        UserRequest userRequest = new UserRequest();
+        userRequest.setMobile(mobile);
+        String content = objectMapper.writeValueAsString(userRequest);
 
         // 2、操作
-        String mobile = "123456789";
-        mockMvc.perform(post("/user/register").param("mobile", mobile))
+        mockMvc.perform(post("/user/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
                 .andExpect(status().isOk())
         ;
         // 3、验证
@@ -82,9 +94,12 @@ public class UserControllerTest {
         user.setMobile(mobile);
         userMapper.insert(user);
 
+        String content = objectMapper.writeValueAsString(user);
         // 2、操作
         // 3、验证
-        mockMvc.perform(post("/user/register").param("mobile", mobile))
+        mockMvc.perform(post("/user/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.msg").value("该手机号已注册"))
         ;
