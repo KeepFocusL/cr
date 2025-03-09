@@ -3,7 +3,9 @@ package com.example.cr.user.controller;
 import com.example.cr.user.request.UserRequest;
 import com.example.cr.common.response.R;
 import com.example.cr.user.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public R<Integer> register(UserRequest request){
+    public R<Integer> register(@Valid UserRequest request){
         return R.ok(userService.register(request));
     }
 }

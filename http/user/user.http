@@ -6,3 +6,9 @@ POST http://localhost:8081/user/register
 Content-Type: application/x-www-form-urlencoded
 
 mobile = 123456789
+
+### 注册接口
+POST http://localhost:8081/user/register
+Content-Type: application/x-www-form-urlencoded
+
+mobile =
