@@ -17,21 +17,12 @@ public class UserController {
     UserService userService;
 
     @GetMapping("count")
-    public R<Long> count() {
-        R<Long> r = new R<Long>();
-        r.setCode(200);
-        r.setMessage("OK");
-        r.setData(userService.count());
-        return r;
+    public R<Long> count(){
+        return R.ok(userService.count());
     }
 
     @PostMapping("register")
-    public R<Integer> register(UserRequest request) {
-        int register = userService.register(request);
-        R<Integer> r = new R<>();
-        r.setCode(200);
-        r.setMessage("OK");
-        r.setData(register);
-        return r;
+    public R<Integer> register(UserRequest request){
+        return R.ok(userService.register(request));
     }
 }
