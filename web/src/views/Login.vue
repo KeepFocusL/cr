@@ -3,7 +3,7 @@ import {ref} from 'vue'
 import {ElMessage} from 'element-plus'
 import {sendCode}from "@/api/auth.js"
 
-const mobile = ref('')
+const mobile = ref('18123456789')
 const code = ref('')
 
 const handleGetCode = () => {
