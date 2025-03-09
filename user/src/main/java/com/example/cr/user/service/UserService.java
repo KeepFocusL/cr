@@ -1,5 +1,6 @@
 package com.example.cr.user.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.example.cr.common.exception.CommonBusinessException;
 import com.example.cr.common.exception.UserNotExistsException;
@@ -103,9 +104,6 @@ public class UserService {
         }
 
         User user = users.get(0);
-        LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setId(user.getId());
-        loginResponse.setMobile(user.getMobile());
-        return loginResponse;
+        return BeanUtil.copyProperties(user, LoginResponse.class);
     }
 }
