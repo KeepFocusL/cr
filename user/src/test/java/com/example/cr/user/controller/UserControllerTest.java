@@ -68,7 +68,7 @@ public class UserControllerTest {
     @Test
     void register() throws Exception {
         // 1、准备
-        String mobile = "123456789";
+        String mobile = "13312345678";
 
         UserRequest userRequest = new UserRequest();
         userRequest.setMobile(mobile);
@@ -88,7 +88,7 @@ public class UserControllerTest {
     @Test
     void register_shouldThrowExceptionWhenMobileAlreadyRegistered() throws Exception {
         // 1、准备
-        String mobile = "123456789";
+        String mobile = "13312345678";
 
         User user = new User();
         user.setId(SnowflakeUtil.getId());
