@@ -60,7 +60,8 @@ public class UserService {
         }
 
         // 生成一个验证码
-        String code = RandomUtil.randomString(4);
+//        String code = RandomUtil.randomString(4);
+        String code = "6666";
         log.info("生成验证码: {}, 手机号: {}, 业务场景: {}", code, mobile, "登录");
 
         // td-1：保存到验证码历史记录表
