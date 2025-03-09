@@ -12,8 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -55,7 +54,7 @@ public class UserControllerTest {
         // 3、验证：一定返回 10 条数据
         mockMvc.perform(get("/user/count"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(number)))
+                .andExpect(jsonPath("$.data").value(number))
         ;
     }
 
