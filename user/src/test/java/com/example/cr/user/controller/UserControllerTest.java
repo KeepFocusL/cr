@@ -1,5 +1,6 @@
 package com.example.cr.user.controller;
 
+import com.example.cr.common.util.SnowflakeUtil;
 import com.example.cr.user.entity.User;
 import com.example.cr.user.mapper.UserMapper;
 import com.example.cr.user.request.UserRequest;
@@ -51,7 +52,7 @@ public class UserControllerTest {
         for (int i = 0; i < number; i++) {
             User user = new User();
             // 假设对象提供了对应的方法
-            user.setId(System.currentTimeMillis() + i);
+            user.setId(SnowflakeUtil.getId());
             user.setMobile(i + "");
             userMapper.insert(user);
         }
@@ -90,7 +91,7 @@ public class UserControllerTest {
         String mobile = "123456789";
 
         User user = new User();
-        user.setId(System.currentTimeMillis());
+        user.setId(SnowflakeUtil.getId());
         user.setMobile(mobile);
         userMapper.insert(user);
 
