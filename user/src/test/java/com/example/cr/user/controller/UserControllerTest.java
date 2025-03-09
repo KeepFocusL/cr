@@ -85,8 +85,8 @@ public class UserControllerTest {
         // 2、操作
         // 3、验证
         mockMvc.perform(post("/user/register").param("mobile", mobile))
-                .andExpect(status().is5xxServerError())
-                .andExpect(jsonPath("$.msg").value("系统异常"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.msg").value("该手机号已注册"))
         ;
 
     }
