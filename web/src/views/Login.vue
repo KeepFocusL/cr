@@ -10,6 +10,8 @@ const isLoginDisabled = computed(() => {
   return code.value.length < 4 || !code.value
 })
 
+const loading = ref(false)
+
 const handleGetCode = () => {
   if (!mobile.value || mobile.value.length !== 11) {
     ElMessage.error('请输入正确的手机号')
@@ -17,7 +19,7 @@ const handleGetCode = () => {
   }
   sendCode(mobile.value)
     .then((res) => {
-      if (res.code === 200) {
+      if (res.code === 200){
         ElMessage.success('验证码已发送')
       } else {
         ElMessage.error(res.msg || '发送验证码失败')
@@ -38,9 +40,10 @@ const handleLogin = () => {
     return
   }
 
+  loading.value = true
   login(mobile.value, code.value)
     .then((res) => {
-      if (res.code === 200) {
+      if (res.code === 200){
         ElMessage.success('登录成功')
       } else {
         ElMessage.error(res.msg || '登录失败')
@@ -48,6 +51,9 @@ const handleLogin = () => {
     })
     .catch((error) => {
       ElMessage.error(error.response?.data?.msg || '登录失败')
+    })
+    .finally(() => {
+      loading.value = false
     })
 }
 </script>
@@ -97,6 +103,7 @@ const handleLogin = () => {
             class="login-btn"
             @click="handleLogin"
             :disabled="isLoginDisabled"
+            :loading="loading"
           >
             登录
           </el-button>
