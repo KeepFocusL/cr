@@ -53,9 +53,7 @@ public class UserService {
 
     public void sendCode(SendCodeRequest request) {
         String mobile = request.getMobile();
-        UserExample userExample = new UserExample();
-        userExample.createCriteria().andMobileEqualTo(mobile);
-        List<User> users = userMapper.selectByExample(userExample);
+        List<User> users = selectByMobile(mobile);
         if (users.isEmpty()){
             // 如果为空，说明手机号没有被注册过
             User user = new User();
@@ -87,11 +85,9 @@ public class UserService {
     3. 还会涉及到有些字段并不是 User 这个实体的字段，比如 token 等
      */
     public LoginResponse login(LoginRequest request) {
-        String mobile = request.getMobile();
         String code = request.getCode();
-        UserExample userExample = new UserExample();
-        userExample.createCriteria().andMobileEqualTo(mobile);
-        List<User> users = userMapper.selectByExample(userExample);
+        String mobile = request.getMobile();
+        List<User> users = selectByMobile(mobile);
 
         // 校验用户是否存在
         if (users.isEmpty()){
@@ -105,5 +101,11 @@ public class UserService {
 
         User user = users.get(0);
         return BeanUtil.copyProperties(user, LoginResponse.class);
+    }
+
+    private List<User> selectByMobile(String mobile) {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andMobileEqualTo(mobile);
+        return userMapper.selectByExample(userExample);
     }
 }
