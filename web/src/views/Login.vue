@@ -3,8 +3,11 @@ import {ref, computed} from 'vue'
 import {ElMessage} from 'element-plus'
 import {sendCode, login}from "@/api/auth.js"
 import {useRouter} from 'vue-router'
+import {useUserStore} from '@/stores/user.js'
 
 const router = useRouter()
+
+const userStore = useUserStore();
 
 const mobile = ref('18123456789')
 const code = ref('')
@@ -47,6 +50,7 @@ const handleLogin = () => {
   login(mobile.value, code.value)
     .then((res) => {
       if (res.code === 200){
+        userStore.setUserInfo(res.data)
         ElMessage.success('登录成功')
         router.push('/dashboard')
       } else {
