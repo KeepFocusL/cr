@@ -161,7 +161,9 @@ onBeforeUnmount(() => {
 })
 
 const handleLogout = () => {
+  userStore.clearUserInfo()
   console.log('点击了退出登录')
+  router.push('/login')
 }
 
 // 将菜单配置抽离
