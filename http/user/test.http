@@ -1,4 +1,5 @@
 ### 测试 test 接口
-GET http://localhost:8080/test
+GET http://localhost:8081/test
 
 ###
+GET http://localhost:8081/ping
