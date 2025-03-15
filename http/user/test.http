@@ -2,4 +2,6 @@
 GET http://localhost:8081/test
 
 ###
-GET http://localhost:8081/ping
+GET http://localhost:8081/user/ping
+Content-Type: application/json
+Authorization: Bearer {{token}}
