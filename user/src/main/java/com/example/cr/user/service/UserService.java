@@ -93,14 +93,14 @@ public class UserService {
         String mobile = request.getMobile();
         List<User> users = selectByMobile(mobile);
 
-        // 校验用户是否存在
-        if (users.isEmpty()){
-            throw new UserNotExistsException("用户不存在");
-        }
-
         // 校验验证码是否正确
         if (!"6666".equals(code)){
             throw new CommonBusinessException("验证码错误");
+        }
+
+        // 校验用户是否存在
+        if (users.isEmpty()){
+            throw new UserNotExistsException("用户不存在");
         }
 
         User user = users.get(0);
