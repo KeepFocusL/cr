@@ -1,6 +1,11 @@
 package com.example.cr.generator;
 
 import com.example.cr.generator.util.CustomFreemarkerUtil;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Node;
+import org.dom4j.io.SAXReader;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,12 +13,14 @@ import java.util.Map;
 public class CodeGenerator {
     static String toPath = "generator/src/main/java/com/example/cr/generator/demo/";
 
+    static String pomPath ="generator/pom.xml";
+
     static {
         new File(toPath).mkdirs();
     }
 
     public static void main(String[] args) throws Exception {
-        CustomFreemarkerUtil.getTemplate("test.ftl");
+        /*CustomFreemarkerUtil.getTemplate("test.ftl");
 
         String tableName = "user";
         String c = tableName.charAt(0) + "";
@@ -30,6 +37,19 @@ public class CodeGenerator {
         Map<String, Object> data = new HashMap<>();
         data.put("className", className);
 
-        CustomFreemarkerUtil.generate(toPath + className + ".java", data);
+        CustomFreemarkerUtil.generate(toPath + className + ".java", data);*/
+        String rcf = readConfigurationFileFromPomXml();
+    }
+
+    private static String readConfigurationFileFromPomXml() throws DocumentException {
+        SAXReader saxReader = new SAXReader();
+        HashMap<String, String> map = new HashMap<>();
+        map.put("pom", "http://maven.apache.org/POM/4.0.0");
+        saxReader.getDocumentFactory().setXPathNamespaceURIs(map);
+        Document document = saxReader.read(pomPath);
+        Node node = document.selectSingleNode("//pom:configurationFile");
+        String configurationFile = node.getText();
+        System.out.println("从 pom.xml 读取 mybatis-generator-maven-plugin 需要用到的 configurationFile=" + configurationFile);
+        return configurationFile;
     }
 }
