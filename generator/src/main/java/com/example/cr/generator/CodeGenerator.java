@@ -8,6 +8,7 @@ import org.dom4j.io.SAXReader;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CodeGenerator {
@@ -38,7 +39,27 @@ public class CodeGenerator {
         data.put("className", className);
 
         CustomFreemarkerUtil.generate(toPath + className + ".java", data);*/
-        String rcf = readConfigurationFileFromPomXml();
+
+        CustomFreemarkerUtil.getTemplate("test.ftl");
+
+        String configurationFile = readConfigurationFileFromPomXml();
+        Document document = new SAXReader().read("generator/" + configurationFile);
+        List<Node> nodes = document.selectNodes("//table");
+        for (Node table : nodes) {
+            Node tableNameNode = table.selectSingleNode("@tableName");
+            Node domainObjectNameNode = table.selectSingleNode("@domainObjectName");
+
+            String tableName = tableNameNode.getText();
+            String domainObjectName = domainObjectNameNode.getText();
+
+            System.out.println("表名 = " + tableName + ", 对应的实体名 = " + domainObjectName);
+
+            Map<String, Object> data = new HashMap<>();
+            String className = domainObjectName + "Service";
+            data.put("className", className);
+
+            CustomFreemarkerUtil.generate(toPath + className + ".java", data);
+        }
     }
 
     private static String readConfigurationFileFromPomXml() throws DocumentException {
