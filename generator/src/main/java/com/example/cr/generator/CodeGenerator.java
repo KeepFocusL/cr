@@ -38,7 +38,8 @@ public class CodeGenerator {
 
         CustomFreemarkerUtil.generate(toPath + className + ".java", data);*/
 
-        CustomFreemarkerUtil.getTemplate("test.ftl");
+//        CustomFreemarkerUtil.getTemplate("test.ftl");
+        CustomFreemarkerUtil.getTemplate("entity.ftl");
 
         String configurationFile = readConfigurationFileFromPomXml();
         System.out.println("configurationFile = " + configurationFile);
@@ -77,7 +78,8 @@ public class CodeGenerator {
             System.out.println(columnByTableName);
 
             Map<String, Object> data = new HashMap<>();
-            String className = domainObjectName + "Service";
+//            String className = domainObjectName + "Service";
+            String className = domainObjectName;
             data.put("className", className);
             data.put("module", module);
             data.put("fieldList", columnByTableName);
