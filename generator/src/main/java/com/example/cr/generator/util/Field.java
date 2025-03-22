@@ -2,6 +2,8 @@ package com.example.cr.generator.util;
 
 public class Field {
     String name;
+    String nameLowerCamelCase; // 字段名小驼峰：xxxId
+    String nameUpperCamelCase; // 字段名大驼峰：XxxId
     String type;
     String comment;
 
@@ -17,6 +19,22 @@ public class Field {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNameLowerCamelCase() {
+        return nameLowerCamelCase;
+    }
+
+    public void setNameLowerCamelCase(String nameLowerCamelCase) {
+        this.nameLowerCamelCase = nameLowerCamelCase;
+    }
+
+    public String getNameUpperCamelCase() {
+        return nameUpperCamelCase;
+    }
+
+    public void setNameUpperCamelCase(String nameUpperCamelCase) {
+        this.nameUpperCamelCase = nameUpperCamelCase;
     }
 
     public String getType() {
@@ -39,6 +57,8 @@ public class Field {
     public String toString() {
         return "Field{" +
                 "name='" + name + '\'' +
+                ", nameLowerCamelCase='" + nameLowerCamelCase + '\'' +
+                ", nameUpperCamelCase='" + nameUpperCamelCase + '\'' +
                 ", type='" + type + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';

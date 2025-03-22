@@ -5,7 +5,7 @@ public class ${className} {
     /*
     ${field.comment}
     */
-    String ${field.name};
+    String ${field.nameLowerCamelCase};
 
 </#list>
 }
