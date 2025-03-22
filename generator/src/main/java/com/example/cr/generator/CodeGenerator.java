@@ -16,10 +16,6 @@ public class CodeGenerator {
 
     static String pomPath ="generator/pom.xml";
 
-    static {
-        new File(toPath).mkdirs();
-    }
-
     public static void main(String[] args) throws Exception {
         /*CustomFreemarkerUtil.getTemplate("test.ftl");
 
