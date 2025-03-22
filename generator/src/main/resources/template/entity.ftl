@@ -1,11 +1,13 @@
 package com.example.cr.${module}.demo;
 
+import java.util.Date;
+
 public class ${className} {
 <#list fieldList as field>
     /*
     ${field.comment}
     */
-    String ${field.nameLowerCamelCase};
+    ${field.javaType} ${field.nameLowerCamelCase};
 
 </#list>
 }

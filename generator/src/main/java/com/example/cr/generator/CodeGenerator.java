@@ -53,10 +53,10 @@ public class CodeGenerator {
         Document document = new SAXReader().read("generator/" + configurationFile);
 
         // --- <数据库配置信息> ---
-        Node connectionRUL = document.selectSingleNode("//@connectionURL");
+        Node connectionURL = document.selectSingleNode("//@connectionURL");
         Node userId = document.selectSingleNode("//@userId");
         Node password = document.selectSingleNode("//@password");
-        CustomDbUtil.url = connectionRUL.getText();
+        CustomDbUtil.url = connectionURL.getText();
         CustomDbUtil.user = userId.getText();
         CustomDbUtil.password = password.getText();
         System.out.println(CustomDbUtil.url);

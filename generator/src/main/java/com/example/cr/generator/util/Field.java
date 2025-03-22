@@ -5,6 +5,7 @@ public class Field {
     String nameLowerCamelCase; // 字段名小驼峰：xxxId
     String nameUpperCamelCase; // 字段名大驼峰：XxxId
     String type;
+    String javaType;
     String comment;
 
     public Field(String name, String type, String comment) {
@@ -45,6 +46,14 @@ public class Field {
         this.type = type;
     }
 
+    public String getJavaType() {
+        return javaType;
+    }
+
+    public void setJavaType(String javaType) {
+        this.javaType = javaType;
+    }
+
     public String getComment() {
         return comment;
     }
@@ -60,6 +69,7 @@ public class Field {
                 ", nameLowerCamelCase='" + nameLowerCamelCase + '\'' +
                 ", nameUpperCamelCase='" + nameUpperCamelCase + '\'' +
                 ", type='" + type + '\'' +
+                ", javaType='" + javaType + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
     }

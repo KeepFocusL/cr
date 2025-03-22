@@ -1,10 +1,12 @@
 package com.example.cr.user.demo;
 
+import java.util.Date;
+
 public class User {
     /*
     
     */
-    String id;
+    Long id;
 
     /*
     用户名
@@ -29,11 +31,11 @@ public class User {
     /*
     创建时间
     */
-    String createdAt;
+    Date createdAt;
 
     /*
     更新时间
     */
-    String updatedAt;
+    Date updatedAt;
 
 }

@@ -31,6 +31,7 @@ public class CustomDbUtil {
             Field f = new Field(name, type, comment);
             f.setNameLowerCamelCase(underLineToLowerCameCase(name));
             f.setNameUpperCamelCase(underLineToUpperCameCase(name));
+            f.setJavaType(sqlTypeToJavaType(type));
             fieldList.add(f);
         }
         return fieldList;
@@ -57,5 +58,34 @@ public class CustomDbUtil {
     public static String underLineToUpperCameCase(String str) {
         String s = underLineToLowerCameCase(str);
         return s.substring(0, 1).toUpperCase() + s.substring(1);
+    }
+
+    /**
+     * 数据库类型转为 Java 类型
+     */
+    public static String sqlTypeToJavaType(String sqlType) {
+        if (sqlType.toUpperCase().contains("varchar".toUpperCase())
+                || sqlType.toUpperCase().contains("char".toUpperCase())
+                || sqlType.toUpperCase().contains("text".toUpperCase())) {
+            return "String";
+        } else if (sqlType.toUpperCase().contains("datetime".toUpperCase())) {
+            return "Date";
+        } else if (sqlType.toUpperCase().contains("time".toUpperCase())) {
+            return "Date";
+        } else if (sqlType.toUpperCase().contains("date".toUpperCase())) {
+            return "Date";
+        } else if (sqlType.toUpperCase().contains("bigint".toUpperCase())) {
+            return "Long";
+        } else if (sqlType.toUpperCase().contains("int".toUpperCase())) {
+            return "Integer";
+        } else if (sqlType.toUpperCase().contains("long".toUpperCase())) {
+            return "Long";
+        } else if (sqlType.toUpperCase().contains("decimal".toUpperCase())) {
+            return "BigDecimal";
+        } else if (sqlType.toUpperCase().contains("boolean".toUpperCase())) {
+            return "Boolean";
+        } else {
+            return "String";
+        }
     }
 }
