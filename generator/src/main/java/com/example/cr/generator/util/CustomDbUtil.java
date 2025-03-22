@@ -1,6 +1,8 @@
 package com.example.cr.generator.util;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CustomDbUtil {
     public static String url;
@@ -12,7 +14,9 @@ public class CustomDbUtil {
         return connection;
     }
 
-    public static void getColumnByTableName(String table) throws SQLException {
+    public static List<Field> getColumnByTableName(String table) throws SQLException {
+        List<Field> fieldList = new ArrayList<>();
+
         Connection connection = getConnection();
         Statement statement = connection.createStatement();
         String sql = "show full columns from `" + table + "`";
@@ -21,7 +25,10 @@ public class CustomDbUtil {
             String field = rs.getString("Field");
             String type = rs.getString("Type");
             String comment = rs.getString("Comment");
-            System.out.println(field + " - " + type + " - " + comment);
+
+            Field f = new Field(field, type, comment);
+            fieldList.add(f);
         }
+        return fieldList;
     }
 }

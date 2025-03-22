@@ -1,6 +1,8 @@
 package com.example.cr.generator;
 
+import com.example.cr.generator.util.CustomDbUtil;
 import com.example.cr.generator.util.CustomFreemarkerUtil;
+import com.example.cr.generator.util.Field;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Node;
@@ -48,6 +50,19 @@ public class CodeGenerator {
         new File(toPath).mkdirs();
 
         Document document = new SAXReader().read("generator/" + configurationFile);
+
+        // --- <数据库配置信息> ---
+        Node connectionRUL = document.selectSingleNode("//@connectionURL");
+        Node userId = document.selectSingleNode("//@userId");
+        Node password = document.selectSingleNode("//@password");
+        CustomDbUtil.url = connectionRUL.getText();
+        CustomDbUtil.user = userId.getText();
+        CustomDbUtil.password = password.getText();
+        System.out.println(CustomDbUtil.url);
+        System.out.println(CustomDbUtil.user);
+        System.out.println(CustomDbUtil.password);
+        // --- </数据库配置信息> ---
+
         List<Node> nodes = document.selectNodes("//table");
         for (Node table : nodes) {
             Node tableNameNode = table.selectSingleNode("@tableName");
@@ -58,10 +73,14 @@ public class CodeGenerator {
 
             System.out.println("表名 = " + tableName + ", 对应的实体名 = " + domainObjectName);
 
+            List<Field> columnByTableName = CustomDbUtil.getColumnByTableName(tableName);
+            System.out.println(columnByTableName);
+
             Map<String, Object> data = new HashMap<>();
             String className = domainObjectName + "Service";
             data.put("className", className);
             data.put("module", module);
+            data.put("fieldList", columnByTableName);
 
             CustomFreemarkerUtil.generate(toPath + className + ".java", data);
         }
