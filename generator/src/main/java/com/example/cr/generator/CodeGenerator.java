@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class CodeGenerator {
-    static String toPath = "[module]/src/main/java/com/example/cr/[module]/demo/";
+    static String toPath = "[module]/src/main/java/com/example/cr/[module]/service/";
 
     static String pomPath ="generator/pom.xml";
 
@@ -39,7 +39,7 @@ public class CodeGenerator {
         CustomFreemarkerUtil.generate(toPath + className + ".java", data);*/
 
 //        CustomFreemarkerUtil.getTemplate("test.ftl");
-        CustomFreemarkerUtil.getTemplate("entity.ftl");
+        CustomFreemarkerUtil.getTemplate("service.ftl");
 
         String configurationFile = readConfigurationFileFromPomXml();
         System.out.println("configurationFile = " + configurationFile);
@@ -77,12 +77,20 @@ public class CodeGenerator {
             List<Field> columnByTableName = CustomDbUtil.getColumnByTableName(tableName);
             System.out.println(columnByTableName);
 
+            // 假设当前项目的表名有统一前缀 xxx_ 则后续需要的各种变量尽量以实体名做为基础进行修改
+            // 大驼峰格式的 Domain 变量 (配置文件中配置的实体名，如 OneTwo)
+            String Domain = domainObjectName;
+            // 小驼峰格式的 domain = (配置文件中配置的实体名，首字母改成小些，如 oneTwo)
+            String domain = Domain.substring(0, 1).toLowerCase() + Domain.substring(1);
+
             Map<String, Object> data = new HashMap<>();
 //            String className = domainObjectName + "Service";
-            String className = domainObjectName;
+            String className = domainObjectName + "Service";
             data.put("className", className);
             data.put("module", module);
             data.put("fieldList", columnByTableName);
+            data.put("Domain", Domain);
+            data.put("domain", domain);
 
             CustomFreemarkerUtil.generate(toPath + className + ".java", data);
         }
