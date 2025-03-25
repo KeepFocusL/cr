@@ -1,4 +1,4 @@
-package com.example.cr.${module}.demo;
+package com.example.cr.generator.demo;
 
 public class ${className} {
 }

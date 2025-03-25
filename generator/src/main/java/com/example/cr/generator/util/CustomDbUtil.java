@@ -1,5 +1,8 @@
 package com.example.cr.generator.util;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,33 +10,112 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class CustomDbUtil {
-    public static String url;
-    public static String user;
-    public static String password;
+    public static String url = "";
+    public static String user = "";
+    public static String password = "";
 
-    public static Connection getConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection(url, user, password);
-        return connection;
+    public static Connection getConnection() {
+        Connection conn = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            String url = CustomDbUtil.url;
+            String user = CustomDbUtil.user;
+            String password = CustomDbUtil.password;
+            conn = DriverManager.getConnection(url, user, password);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return conn;
     }
 
-    public static List<Field> getColumnByTableName(String table) throws SQLException {
-        List<Field> fieldList = new ArrayList<>();
-
-        Connection connection = getConnection();
-        Statement statement = connection.createStatement();
-        String sql = "show full columns from `" + table + "`";
-        ResultSet rs= statement.executeQuery(sql);
-        while (rs.next()){
-            String name = rs.getString("Field");
-            String type = rs.getString("Type");
-            String comment = rs.getString("Comment");
-
-            Field f = new Field(name, type, comment);
-            f.setNameLowerCamelCase(underLineToLowerCameCase(name));
-            f.setNameUpperCamelCase(underLineToUpperCameCase(name));
-            f.setJavaType(sqlTypeToJavaType(type));
-            fieldList.add(f);
+    /**
+     * 获得表注释
+     *
+     * @param tableName
+     * @return
+     * @throws Exception
+     */
+    public static String getTableComment(String tableName) throws Exception {
+        Connection conn = getConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("select table_comment from information_schema.tables Where table_name = '" + tableName + "'");
+        String tableNameCH = "";
+        if (rs != null) {
+            while (rs.next()) {
+                tableNameCH = rs.getString("table_comment");
+                break;
+            }
         }
+        rs.close();
+        stmt.close();
+        conn.close();
+        System.out.println("表名（中文注释）：" + tableNameCH);
+        return tableNameCH;
+    }
+
+    /**
+     * 获得所有列信息
+     *
+     * @param tableName
+     * @return
+     * @throws Exception
+     */
+    public static List<Field> getColumnByTableName(String tableName) throws Exception {
+        List<Field> fieldList = new ArrayList<>();
+        Connection conn = getConnection();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("show full columns from `" + tableName + "`");
+        if (rs != null) {
+            while (rs.next()) {
+                String columnName = rs.getString("Field");
+                String type = rs.getString("Type");
+                String comment = rs.getString("Comment");
+                String nullAble = rs.getString("Null"); //YES NO
+                String defaultValue = rs.getString("Default");
+                Field field = new Field();
+                field.setName(columnName);
+                field.setNameLowerCamelCase(underLineToLowerCameCase(columnName));
+                field.setNameUpperCamelCase(underLineToUpperCameCase(columnName));
+                field.setType(type);
+                field.setJavaType(CustomDbUtil.sqlTypeToJavaType(rs.getString("Type")));
+                field.setComment(comment);
+                if (comment.contains("|")) {
+                    field.setNameCn(comment.substring(0, comment.indexOf("|")));
+                } else {
+                    field.setNameCn(comment);
+                }
+                field.setNullAble("YES".equals(nullAble));
+                field.setDefaultValue(defaultValue);
+                if (type.toUpperCase().contains("varchar".toUpperCase())) {
+                    String lengthStr = type.substring(type.indexOf("(") + 1, type.length() - 1);
+                    field.setLength(Integer.valueOf(lengthStr));
+                } else {
+                    field.setLength(0);
+                }
+                if (comment.contains("枚举")) {
+                    field.setEnums(true);
+
+                    // 例：从注释中的“枚举[XxxYyyEnum]”，得到 enumsConst = XXX_YYY
+                    int start = comment.indexOf("[");
+                    int end = comment.indexOf("]");
+                    String enumsName = comment.substring(start + 1, end); // XxxYyy
+                    field.setEnumsClass(enumsName);
+                    String enumsConst = StrUtil.toUnderlineCase(enumsName)
+                            .toUpperCase().replace("_ENUM", "");
+                    field.setEnumsConst(enumsConst);
+                } else {
+                    field.setEnums(false);
+                }
+                field.setSearchable(comment.endsWith("|searchable"));
+                fieldList.add(field);
+            }
+        }
+        rs.close();
+        stmt.close();
+        conn.close();
+        System.out.println("列信息：" + JSONUtil.toJsonPrettyStr(fieldList));
         return fieldList;
     }
 
