@@ -39,3 +39,16 @@ create table `course`
     `created_at` datetime(3) null comment '课程创建时间', -- 精度为 3 位小数秒，表示可以存储到毫秒级别。
     `updated_at` datetime(3) null comment '课程更新时间' -- 例如，2025-01-01 12:34:56.789
 ) comment ='课程';
+
+-- 车站表
+drop table if exists `station`;
+create table `station`
+(
+    `id`          bigint primary key,
+    `name`        varchar(20) not null COMMENT '车站名|searchable',
+    `name_pinyin` varchar(20) null COMMENT '车站名的拼音|searchable',
+    `name_py`     varchar(20) null COMMENT '车站名的拼音的首字母缩写|searchable',
+    `description` varchar(50) null COMMENT '车站描述|searchable',
+    `created_at`  datetime(3) null comment '车站创建时间', -- 精度为 3 位小数秒，表示可以存储到毫秒级别。
+    `updated_at`  datetime(3) null comment '车站更新时间'  -- 例如，2025-01-01 12:34:56.789
+) comment ='车站';
