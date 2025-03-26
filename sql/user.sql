@@ -26,3 +26,16 @@ create table `sb`
     `updated_at` datetime(3) null comment '傻逼更新时间', -- 例如，2025-01-01 12:34:56.789
     unique key `mobile_unique` (`mobile`)
 ) comment ='傻逼';
+
+
+
+-- course
+drop table if exists `course`;
+create table `course`
+(
+    `id`         bigint primary key,
+    `name`       varchar(20) null COMMENT '课程名|searchable',
+    `description`      varchar(50) null COMMENT '课程描述|searchable',
+    `created_at` datetime(3) null comment '课程创建时间', -- 精度为 3 位小数秒，表示可以存储到毫秒级别。
+    `updated_at` datetime(3) null comment '课程更新时间' -- 例如，2025-01-01 12:34:56.789
+) comment ='课程';
