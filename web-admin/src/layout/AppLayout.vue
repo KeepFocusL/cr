@@ -130,7 +130,8 @@ import {
   SwitchButton,
   Fold,
   Expand,
-  ArrowDown
+  ArrowDown,
+  DataLine
 } from '@element-plus/icons-vue'
 import {useUserStore} from '@/stores/user.js'
 
