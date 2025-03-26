@@ -179,6 +179,11 @@ const menuConfig = [
     icon: Monitor
   },
   {
+    path: '/course',
+    title: '课程管理',
+    icon: Monitor
+  },
+  {
     title: '多级菜单',
     icon: Files,
     children: [

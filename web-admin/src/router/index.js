@@ -36,6 +36,12 @@ const router = createRouter({
           name: 'Sb',
           component: () => import('../views/user/Sb.vue'),
           meta: { title: '傻逼管理' }
+        },
+        {
+          path: 'course',
+          name: 'Course',
+          component: () => import('../views/user/Course.vue'),
+          meta: { title: '课程管理' }
         }
       ]
     },
