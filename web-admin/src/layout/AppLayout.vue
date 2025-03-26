@@ -174,6 +174,11 @@ const menuConfig = [
     icon: Monitor
   },
   {
+    path: '/sb',
+    title: '傻逼管理',
+    icon: Monitor
+  },
+  {
     title: '多级菜单',
     icon: Files,
     children: [

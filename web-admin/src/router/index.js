@@ -30,6 +30,12 @@ const router = createRouter({
           name: 'Empty',
           component: () => import('../views/Empty.vue'),
           meta: { title: '空白页面' }
+        },
+        {
+          path: 'sb',
+          name: 'Sb',
+          component: () => import('../views/user/Sb.vue'),
+          meta: { title: '傻逼管理' }
         }
       ]
     },

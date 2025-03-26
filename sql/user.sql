@@ -18,8 +18,8 @@ drop table if exists `sb`;
 create table `sb`
 (
     `id`         bigint primary key,
-    `name`       varchar(20) null COMMENT '傻逼用户名',
-    `email`      varchar(50) null COMMENT '傻逼邮箱',
+    `name`       varchar(20) null COMMENT '傻逼用户名|searchable',
+    `email`      varchar(50) null COMMENT '傻逼邮箱|searchable',
     `password`   varchar(50) null COMMENT '傻逼密码',
     `mobile`     varchar(11) not null comment '傻逼手机号',
     `created_at` datetime(3) null comment '傻逼创建时间', -- 精度为 3 位小数秒，表示可以存储到毫秒级别。

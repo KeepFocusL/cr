@@ -33,6 +33,10 @@ public class SbService {
         SbExample.Criteria criteria = sbExample.createCriteria();
         if (request.getKeyword() != null && !request.getKeyword().isEmpty()) {
             String keyword = "%" + request.getKeyword() + "%";
+            criteria.andNameLike(keyword);
+            SbExample.Criteria criteria2 = sbExample.createCriteria();
+            criteria2.andEmailLike(keyword);
+            sbExample.or(criteria2);
         }
 
         PageHelper.startPage(request.getPage(), request.getSize());
