@@ -39,5 +39,6 @@
         <!-- 表名 -> 类名 -->
 <!--        <table tableName="user" domainObjectName="User"/>-->
         <table tableName="sb" domainObjectName="Sb"/>
+        <table tableName="course" domainObjectName="Course"/>
     </context>
 </generatorConfiguration>
