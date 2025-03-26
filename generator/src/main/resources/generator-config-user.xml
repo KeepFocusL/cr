@@ -38,7 +38,8 @@
         <javaClientGenerator targetProject="../user/src/main/java" targetPackage="com.example.cr.user.mapper" type="XMLMAPPER"/>
         <!-- 表名 -> 类名 -->
 <!--        <table tableName="user" domainObjectName="User"/>-->
-        <table tableName="sb" domainObjectName="Sb"/>
-        <table tableName="course" domainObjectName="Course"/>
+<!--        <table tableName="sb" domainObjectName="Sb"/>-->
+        <!--        <table tableName="course" domainObjectName="Course"/>-->
+        <table tableName="station" domainObjectName="Station"/>
     </context>
 </generatorConfiguration>
