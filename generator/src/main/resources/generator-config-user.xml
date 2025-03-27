@@ -40,6 +40,5 @@
 <!--        <table tableName="user" domainObjectName="User"/>-->
 <!--        <table tableName="sb" domainObjectName="Sb"/>-->
         <!--        <table tableName="course" domainObjectName="Course"/>-->
-        <table tableName="station" domainObjectName="Station"/>
     </context>
 </generatorConfiguration>
