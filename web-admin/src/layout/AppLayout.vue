@@ -185,11 +185,6 @@ const menuConfig = [
     icon: Monitor
   },
   {
-    path: '/station',
-    title: '车站管理',
-    icon: DataLine
-  },
-  {
     title: '多级菜单',
     icon: Files,
     children: [
