@@ -11,9 +11,9 @@ public class Station {
 
     private String namePy;
 
-    private Date createTime;
+    private Date createdAt;
 
-    private Date updateTime;
+    private Date updatedAt;
 
     public Long getId() {
         return id;
@@ -47,20 +47,20 @@ public class Station {
         this.namePy = namePy;
     }
 
-    public Date getCreateTime() {
-        return createTime;
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
@@ -73,8 +73,8 @@ public class Station {
         sb.append(", name=").append(name);
         sb.append(", namePinyin=").append(namePinyin);
         sb.append(", namePy=").append(namePy);
-        sb.append(", createTime=").append(createTime);
-        sb.append(", updateTime=").append(updateTime);
+        sb.append(", createdAt=").append(createdAt);
+        sb.append(", updatedAt=").append(updatedAt);
         sb.append("]");
         return sb.toString();
     }

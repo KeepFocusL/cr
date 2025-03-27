@@ -6,8 +6,8 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="name_pinyin" jdbcType="VARCHAR" property="namePinyin" />
     <result column="name_py" jdbcType="VARCHAR" property="namePy" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -68,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, `name`, name_pinyin, name_py, create_time, update_time
+    id, `name`, name_pinyin, name_py, created_at, updated_at
   </sql>
   <select id="selectByExample" parameterType="com.example.cr.business.entity.StationExample" resultMap="BaseResultMap">
     select
@@ -102,10 +102,10 @@
   </delete>
   <insert id="insert" parameterType="com.example.cr.business.entity.Station">
     insert into station (id, `name`, name_pinyin, 
-      name_py, create_time, update_time
+      name_py, created_at, updated_at
       )
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{namePinyin,jdbcType=VARCHAR}, 
-      #{namePy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{namePy,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.example.cr.business.entity.Station">
@@ -123,11 +123,11 @@
       <if test="namePy != null">
         name_py,
       </if>
-      <if test="createTime != null">
-        create_time,
+      <if test="createdAt != null">
+        created_at,
       </if>
-      <if test="updateTime != null">
-        update_time,
+      <if test="updatedAt != null">
+        updated_at,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -143,11 +143,11 @@
       <if test="namePy != null">
         #{namePy,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
+      <if test="createdAt != null">
+        #{createdAt,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
+      <if test="updatedAt != null">
+        #{updatedAt,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -172,11 +172,11 @@
       <if test="row.namePy != null">
         name_py = #{row.namePy,jdbcType=VARCHAR},
       </if>
-      <if test="row.createTime != null">
-        create_time = #{row.createTime,jdbcType=TIMESTAMP},
+      <if test="row.createdAt != null">
+        created_at = #{row.createdAt,jdbcType=TIMESTAMP},
       </if>
-      <if test="row.updateTime != null">
-        update_time = #{row.updateTime,jdbcType=TIMESTAMP},
+      <if test="row.updatedAt != null">
+        updated_at = #{row.updatedAt,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="example != null">
@@ -189,8 +189,8 @@
       `name` = #{row.name,jdbcType=VARCHAR},
       name_pinyin = #{row.namePinyin,jdbcType=VARCHAR},
       name_py = #{row.namePy,jdbcType=VARCHAR},
-      create_time = #{row.createTime,jdbcType=TIMESTAMP},
-      update_time = #{row.updateTime,jdbcType=TIMESTAMP}
+      created_at = #{row.createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{row.updatedAt,jdbcType=TIMESTAMP}
     <if test="example != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -207,11 +207,11 @@
       <if test="namePy != null">
         name_py = #{namePy,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+      <if test="createdAt != null">
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      <if test="updatedAt != null">
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -221,8 +221,8 @@
     set `name` = #{name,jdbcType=VARCHAR},
       name_pinyin = #{namePinyin,jdbcType=VARCHAR},
       name_py = #{namePy,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
