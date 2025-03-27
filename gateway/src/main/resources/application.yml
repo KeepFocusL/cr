@@ -29,3 +29,9 @@ spring:
           filters:
             - StripPrefix=1
           uri: http://127.0.0.1:8080
+        - id: business
+          predicates:
+            - Path=/d/**
+          filters:
+            - StripPrefix=1
+          uri: http://127.0.0.1:8082
