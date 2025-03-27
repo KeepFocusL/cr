@@ -16,8 +16,6 @@ const stationForm = reactive({
   name: null,
   namePinyin: null,
   namePy: null,
-  createTime: null,
-  updateTime: null,
 })
 
 // 表单规则
@@ -30,12 +28,6 @@ const rules = {
   ],
   namePy: [
     {required: true, message: '请输入站名拼音首字母', trigger: 'blur'},
-  ],
-  createTime: [
-    {required: false, message: '请输入新增时间', trigger: 'blur'},
-  ],
-  updateTime: [
-    {required: false, message: '请输入修改时间', trigger: 'blur'},
   ],
 }
 
@@ -51,8 +43,6 @@ const resetForm = () => {
   stationForm.name = null
   stationForm.namePinyin = null
   stationForm.namePy = null
-  stationForm.createTime = null
-  stationForm.updateTime = null
 }
 
 const submitForm = async () => {
@@ -262,8 +252,6 @@ const handleReset = () => {
       <el-table-column prop="name" label="站名"/>
       <el-table-column prop="namePinyin" label="站名拼音"/>
       <el-table-column prop="namePy" label="站名拼音首字母"/>
-      <el-table-column prop="createTime" label="新增时间"/>
-      <el-table-column prop="updateTime" label="修改时间"/>
       <el-table-column label="操作">
         <template #default="{ row }">
           <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
@@ -321,22 +309,6 @@ const handleReset = () => {
             v-model="stationForm.namePy"
             placeholder="请输入站名拼音首字母"
             clearable
-          />
-        </el-form-item>
-        <el-form-item label="新增时间" prop="createTime">
-          <el-date-picker
-            v-model="stationForm.createTime"
-            type="datetime"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="请输入新增时间"
-          />
-        </el-form-item>
-        <el-form-item label="修改时间" prop="updateTime">
-          <el-date-picker
-            v-model="stationForm.updateTime"
-            type="datetime"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="请输入修改时间"
           />
         </el-form-item>
       </el-form>
