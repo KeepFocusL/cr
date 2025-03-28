@@ -49,6 +49,12 @@ const router = createRouter({
           component: () => import('../views/business/Station.vue'),
           meta: { title: '车站管理' }
         },
+        {
+          path: 'train',
+          name: 'Train',
+          component: () => import('../views/business/Train.vue'),
+          meta: { title: '车次管理' }
+        },
       ]
     },
   ],
