@@ -37,7 +37,7 @@
         <!-- mapper 类的位置，type=XMLMAPPER 表示所有的 sql 都放在 xml 里面 -->
         <javaClientGenerator targetProject="../business/src/main/java" targetPackage="com.example.cr.business.mapper" type="XMLMAPPER"/>
         <!-- 表名 -> 类名 -->
-<!--        <table tableName="user" domainObjectName="User"/>-->
-        <table tableName="station" domainObjectName="Station"/>
+        <!--        <table tableName="station" domainObjectName="Station"/>-->
+        <table tableName="train" domainObjectName="Train"/>
     </context>
 </generatorConfiguration>
