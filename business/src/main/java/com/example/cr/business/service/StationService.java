@@ -33,6 +33,13 @@ public class StationService {
         StationExample.Criteria criteria = stationExample.createCriteria();
         if (request.getKeyword() != null && !request.getKeyword().isEmpty()) {
             String keyword = "%" + request.getKeyword() + "%";
+            criteria.andNameLike(keyword);
+            StationExample.Criteria criteria2 = stationExample.createCriteria();
+            criteria2.andNamePinyinLike(keyword);
+            stationExample.or(criteria2);
+            StationExample.Criteria criteria3 = stationExample.createCriteria();
+            criteria3.andNamePyLike(keyword);
+            stationExample.or(criteria3);
         }
 
         PageHelper.startPage(request.getPage(), request.getSize());
