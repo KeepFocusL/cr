@@ -135,7 +135,8 @@ import {
   Van,
   Guide,
   Box,
-  Ticket
+  Ticket,
+  Calendar
 
 } from '@element-plus/icons-vue'
 import {useUserStore} from '@/stores/user.js'
@@ -222,7 +223,7 @@ const menuConfig = [
   },
   {
     title: '每日数据',
-    icon: Files,
+    icon: Calendar,
     children: [
       {
         path: '/daily-train',
