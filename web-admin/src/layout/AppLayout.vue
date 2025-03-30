@@ -227,7 +227,7 @@ const menuConfig = [
       {
         path: '/daily-train',
         title: '每日车次管理',
-        icon: CoffeeCup
+        icon: Van
       }
     ]
   },
