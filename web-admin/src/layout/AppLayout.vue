@@ -190,7 +190,7 @@ const menuConfig = [
     icon: Monitor
   },
   {
-    title: '每日数据',
+    title: '基础数据',
     icon: Files,
     children: [
       {
@@ -218,6 +218,17 @@ const menuConfig = [
         title: '车厢座位管理',
         icon: Ticket
       },
+    ]
+  },
+  {
+    title: '每日数据',
+    icon: Files,
+    children: [
+      {
+        path: '/daily-train',
+        title: '每日车次管理',
+        icon: CoffeeCup
+      }
     ]
   },
   {
