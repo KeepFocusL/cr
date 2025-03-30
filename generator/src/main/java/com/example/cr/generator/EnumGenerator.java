@@ -1,6 +1,7 @@
 package com.example.cr.generator;
 
 import cn.hutool.core.util.StrUtil;
+import com.example.cr.generator.enums.SeatType;
 import com.example.cr.generator.enums.TrainType;
 
 import java.io.File;
@@ -29,6 +30,7 @@ public class EnumGenerator {
             // 需要在 generator 模块中引入目标模块依赖，
             // 或者将目标模块的枚举代码复制到 generator 模块（暂时来看：少量代码冗余比额外引入依赖更合适）
             toJson(TrainType.class, bufferArray);
+            toJson(SeatType.class, bufferArray);
             writeJs(bufferArray);
         } catch (Exception e) {
             e.printStackTrace();
