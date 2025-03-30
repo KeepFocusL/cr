@@ -33,6 +33,7 @@ public class TrainStationService {
         TrainStationExample.Criteria criteria = trainStationExample.createCriteria();
         if (request.getKeyword() != null && !request.getKeyword().isEmpty()) {
             String keyword = "%" + request.getKeyword() + "%";
+            criteria.andTrainCodeLike(keyword);
         }
 
         PageHelper.startPage(request.getPage(), request.getSize());
