@@ -200,8 +200,13 @@ const menuConfig = [
     icon: DataLine
   },
   {
-    path: '/train_carriage',
+    path: '/train-carriage',
     title: '火车车厢管理',
+    icon: DataLine
+  },
+  {
+    path: '/train-seat',
+    title: '车厢座位管理',
     icon: DataLine
   },
   {

@@ -62,10 +62,16 @@ const router = createRouter({
           meta: { title: '火车车站管理' }
         },
         {
-          path: 'train_carriage',
+          path: 'train-carriage',
           name: 'TrainCarriage',
           component: () => import('../views/business/TrainCarriage.vue'),
           meta: { title: '火车车厢管理' }
+        },
+        {
+          path: 'train-seat',
+          name: 'TrainSeat',
+          component: () => import('../views/business/TrainSeat.vue'),
+          meta: { title: '车厢座位管理' }
         },
       ]
     },
