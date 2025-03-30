@@ -119,7 +119,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted, onBeforeUnmount, computed} from 'vue'
+import {ref, onMounted, onBeforeUnmount} from 'vue'
 import {useRouter} from 'vue-router'
 import {
   Monitor,
@@ -131,7 +131,12 @@ import {
   Fold,
   Expand,
   ArrowDown,
-  DataLine
+  LocationInformation,
+  Van,
+  Guide,
+  Box,
+  Ticket
+
 } from '@element-plus/icons-vue'
 import {useUserStore} from '@/stores/user.js'
 
@@ -187,27 +192,27 @@ const menuConfig = [
   {
     path: '/station',
     title: '车站管理',
-    icon: DataLine
+    icon: LocationInformation
   },
   {
     path: '/train',
     title: '车次管理',
-    icon: DataLine
+    icon: Van
   },
   {
     path: '/train-station',
     title: '火车车站管理',
-    icon: DataLine
+    icon: Guide
   },
   {
     path: '/train-carriage',
     title: '火车车厢管理',
-    icon: DataLine
+    icon: Box
   },
   {
     path: '/train-seat',
     title: '车厢座位管理',
-    icon: DataLine
+    icon: Ticket
   },
   {
     title: '多级菜单',
