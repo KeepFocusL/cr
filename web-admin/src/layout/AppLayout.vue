@@ -190,29 +190,35 @@ const menuConfig = [
     icon: Monitor
   },
   {
-    path: '/station',
-    title: '车站管理',
-    icon: LocationInformation
-  },
-  {
-    path: '/train',
-    title: '车次管理',
-    icon: Van
-  },
-  {
-    path: '/train-station',
-    title: '火车车站管理',
-    icon: Guide
-  },
-  {
-    path: '/train-carriage',
-    title: '火车车厢管理',
-    icon: Box
-  },
-  {
-    path: '/train-seat',
-    title: '车厢座位管理',
-    icon: Ticket
+    title: '每日数据',
+    icon: Files,
+    children: [
+      {
+        path: '/station',
+        title: '车站管理',
+        icon: LocationInformation
+      },
+      {
+        path: '/train',
+        title: '车次管理',
+        icon: Van
+      },
+      {
+        path: '/train-station',
+        title: '火车车站管理',
+        icon: Guide
+      },
+      {
+        path: '/train-carriage',
+        title: '火车车厢管理',
+        icon: Box
+      },
+      {
+        path: '/train-seat',
+        title: '车厢座位管理',
+        icon: Ticket
+      },
+    ]
   },
   {
     title: '多级菜单',
