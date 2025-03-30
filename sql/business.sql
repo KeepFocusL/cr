@@ -34,7 +34,7 @@ drop table if exists `train_station`;
 create table `train_station`
 (
     `id`          bigint        not null comment 'id',
-    `train_code`  varchar(20)   not null comment '车次编号',
+    `train_code`  varchar(20)   not null comment '车次编号|searchable',
     `index`       int           not null comment '站序',
     `name`        varchar(20)   not null comment '站名',
     `name_pinyin` varchar(50)   not null comment '站名拼音',
