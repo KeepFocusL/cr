@@ -3,6 +3,7 @@ import {ref, reactive, onMounted, computed} from 'vue'
 import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {saveStation, deleteStation, listStation} from '@/api/business/station.js'
+import { pinyin } from "pinyin-pro";
 
 // 车站列表数据
 const stationList = ref([])
@@ -171,6 +172,12 @@ const getStationList = async () => {
 // 在组件挂载时获取数据
 onMounted(() => {
   getStationList()
+
+
+  // 测试 pinyin-pro
+  // 获取不带音调数组格式拼音
+  let pinyin1 = pinyin("汉语拼音", {pattern: 'first', toneType: "none", type: "string" }); // ["han", "yu", "pin", "yin"]
+  console.log(pinyin1)
 })
 
 // 分页相关数据
