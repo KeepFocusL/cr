@@ -176,8 +176,8 @@ onMounted(() => {
 
   // 测试 pinyin-pro
   // 获取不带音调数组格式拼音
-  let pinyin1 = pinyin("汉语拼音", {pattern: 'first', toneType: "none", type: "string" }); // ["han", "yu", "pin", "yin"]
-  console.log(pinyin1)
+  // let pinyin1 = pinyin("汉语拼音", {pattern: 'first', toneType: "none", type: "string" }); // ["han", "yu", "pin", "yin"]
+  // console.log(pinyin1)
 })
 
 // 分页相关数据
@@ -217,6 +217,20 @@ const handleSearch = () => {
 const handleReset = () => {
   searchForm.keyword = ''
   handleSearch()
+}
+
+// 监听站名变化，自动填充拼音
+const handleNameChange = (value) => {
+  if (!value){
+    stationForm.namePinyin = ''
+    stationForm.namePy = ''
+    return
+  }
+
+  // 获取不带声调的完整拼音，并移除空格
+  stationForm.namePinyin = pinyin(value, {toneType: "none", type: "string"}).replace(/\s/g,'')
+  // 获取拼音首字母，并移除空格
+  stationForm.namePy = pinyin(value, {pattern: 'first', toneType: "none", type: "string"}).replace(/\s/g,'')
 }
 </script>
 
@@ -302,6 +316,7 @@ const handleReset = () => {
             v-model="stationForm.name"
             placeholder="请输入站名"
             clearable
+            @input="handleNameChange"
           />
         </el-form-item>
         <el-form-item label="站名拼音" prop="namePinyin">
