@@ -64,3 +64,18 @@ create table `train_carriage`
     unique key `train_code_index_unique` (`train_code`, `index`),
     primary key (`id`)
 ) comment ='火车车厢';
+
+drop table if exists `train_seat`;
+create table `train_seat`
+(
+    `id`                  bigint      not null comment 'id',
+    `train_code`          varchar(20) not null comment '车次编号|searchable',
+    `carriage_index`      int         not null comment '厢序',
+    `row`                 char(2)     not null comment '排号|01, 02',
+    `col`                 char(1)     not null comment '列号|枚举[SeatCol]',
+    `seat_type`           char(1)     not null comment '座位类型|枚举[SeatType]',
+    `carriage_seat_index` int         not null comment '同车厢座序',
+    `created_at` datetime(3) null comment '创建时间',
+    `updated_at` datetime(3) null comment '更新时间',
+    primary key (`id`)
+) comment ='车厢座位';
