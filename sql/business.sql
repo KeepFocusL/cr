@@ -120,3 +120,21 @@ create table `daily_train_station`
     unique key `date_train_code_index_unique` (`date`, `train_code`, `index`),
     unique key `date_train_code_name_unique` (`date`, `train_code`, `name`)
 ) comment ='每日火车车站';
+
+-- 每日火车车厢
+drop table if exists `daily_train_carriage`;
+create table `daily_train_carriage`
+(
+    `id`          bigint      not null comment 'id',
+    `date`        date        not null comment '日期',
+    `train_code`  varchar(20) not null comment '车次编号|searchable',
+    `index`       int         not null comment '厢号',
+    `seat_type`   char(1)     not null comment '座位类型|枚举[SeatType]',
+    `seat_count`  int         not null comment '座位数',
+    `row_count`   int         not null comment '排数',
+    `col_count`   int         not null comment '列数',
+    `created_at` datetime(3) null comment '创建时间',
+    `updated_at` datetime(3) null comment '更新时间',
+    unique key `date_train_code_index_unique` (`date`, `train_code`, `index`),
+    primary key (`id`)
+) comment ='每日火车车厢';
