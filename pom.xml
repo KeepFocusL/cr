@@ -28,6 +28,7 @@
         <module>generator</module>
         <module>gateway</module>
         <module>business</module>
+        <module>scheduler</module>
     </modules>
     <scm>
         <connection/>
