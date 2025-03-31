@@ -230,7 +230,7 @@ const handleNameChange = (value) => {
   // 获取不带声调的完整拼音，并移除空格
   stationForm.namePinyin = pinyin(value, {toneType: "none", type: "string"}).replace(/\s/g,'')
   // 获取拼音首字母，并移除空格
-  stationForm.namePy = pinyin(value, {pattern: 'first', toneType: "none", type: "string"}).replace(/\s/g,'')
+  stationForm.namePy = pinyin(value, {pattern: 'first', toneType: "none", type: "string"}).replace(/\s/g,'').toUpperCase()
 }
 </script>
 
