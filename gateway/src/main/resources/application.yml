@@ -35,3 +35,9 @@ spring:
           filters:
             - StripPrefix=1
           uri: http://127.0.0.1:8082
+        - id: scheduler
+          predicates:
+            - Path=/s/**
+          filters:
+            - StripPrefix=1
+          uri: http://127.0.0.1:8083
