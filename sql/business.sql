@@ -138,3 +138,21 @@ create table `daily_train_carriage`
     unique key `date_train_code_index_unique` (`date`, `train_code`, `index`),
     primary key (`id`)
 ) comment ='每日火车车厢';
+
+-- 每日座位
+drop table if exists `daily_train_seat`;
+create table `daily_train_seat`
+(
+    `id`                  bigint      not null comment 'id',
+    `date`                date        not null comment '日期',
+    `train_code`          varchar(20) not null comment '车次编号|searchable',
+    `carriage_index`      int         not null comment '厢序',
+    `row`                 char(2)     not null comment '排号|01, 02',
+    `col`                 char(1)     not null comment '列号|枚举[SeatCol]',
+    `seat_type`           char(1)     not null comment '座位类型|枚举[SeatType]',
+    `carriage_seat_index` int         not null comment '同车厢座序',
+    `sell`                varchar(50) not null comment '售卖情况|将经过的车站用01拼接，0表示可卖，1表示已卖',
+    `created_at` datetime(3) null comment '创建时间',
+    `updated_at` datetime(3) null comment '更新时间',
+    primary key (`id`)
+) comment ='每日座位';
