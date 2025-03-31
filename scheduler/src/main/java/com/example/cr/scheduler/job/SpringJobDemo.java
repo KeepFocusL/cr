@@ -1,5 +1,7 @@
 package com.example.cr.scheduler.job;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -7,8 +9,11 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableScheduling
 public class SpringJobDemo {
+
+    private static final Logger log = LoggerFactory.getLogger(SpringJobDemo.class);
+
     @Scheduled(cron = "0/5 * * * *  ?")
-    public void job1(){
-        System.out.println("SpringJobDemo.job1");
+    public void job1() {
+        log.info("SpringJobDemo.job1");
     }
 }
