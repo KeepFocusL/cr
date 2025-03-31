@@ -229,6 +229,11 @@ const menuConfig = [
         path: '/daily-train',
         title: '每日车次管理',
         icon: Van
+      },
+      {
+        path: '/daily_train_station',
+        title: '每日火车车站管理',
+        icon: Guide
       }
     ]
   },
