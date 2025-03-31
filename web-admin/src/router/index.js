@@ -85,6 +85,12 @@ const router = createRouter({
           component: () => import('../views/business/DailyTrainStation.vue'),
           meta: { title: '每日火车车站管理' }
         },
+        {
+          path: 'daily_train_carriage',
+          name: 'DailyTrainCarriage',
+          component: () => import('../views/business/DailyTrainCarriage.vue'),
+          meta: { title: '每日火车车厢管理' }
+        },
       ]
     },
   ],
