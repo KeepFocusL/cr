@@ -239,6 +239,11 @@ const menuConfig = [
         path: '/daily_train_carriage',
         title: '每日火车车厢管理',
         icon: Box
+      },
+      {
+        path: '/daily_train_seat',
+        title: '每日座位',
+        icon: Ticket
       }
     ]
   },
