@@ -1,0 +1,60 @@
+### 定时任务 - 查询所有
+GET http://localhost:8083/job/list
+
+### 定时任务 - 新增
+POST http://localhost:8083/job/save
+Content-Type: application/json
+
+{
+"name": "com.example.cr.scheduler.job.QuartzJob1",
+"group": "default",
+"cronExpression": "*/5 * * * * ?",
+"desc": "test job"
+}
+
+### 定时任务 - 暂停指定任务
+POST http://localhost:8083/job/pause
+Content-Type: application/json
+
+{
+  "name": "com.example.cr.scheduler.job.QuartzJob1",
+  "group": "default"
+}
+
+### 定时任务 - 重启指定任务
+POST http://localhost:8083/job/resume
+Content-Type: application/json
+
+{
+  "name": "com.example.cr.scheduler.job.QuartzJob1",
+  "group": "default"
+}
+
+### 定时任务 - 重新设置任务配置
+POST http://localhost:8083/job/reschedule
+Content-Type: application/json
+
+{
+  "name": "com.example.cr.scheduler.job.QuartzJob1",
+  "group": "default",
+  "cronExpression": "0/5 * * * * ?",
+  "desc": "test job"
+}
+
+### 定时任务 - 删除指定任务
+POST http://localhost:8083/job/delete
+Content-Type: application/json
+
+{
+  "name": "com.example.cr.scheduler.job.QuartzJob1",
+  "group": "default"
+}
+
+### 定时任务 - 单独执行指定任务（计划外、一次性、手工补偿）
+POST http://localhost:8083/job/run
+Content-Type: application/json
+
+{
+  "name": "com.example.cr.scheduler.job.QuartzJob1",
+  "group": "default"
+}
