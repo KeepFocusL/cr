@@ -136,7 +136,8 @@ import {
   Guide,
   Box,
   Ticket,
-  Calendar
+  Calendar,
+  Timer
 
 } from '@element-plus/icons-vue'
 import {useUserStore} from '@/stores/user.js'
@@ -179,6 +180,11 @@ const menuConfig = [
     path: '/dashboard',
     title: '仪表盘',
     icon: Monitor
+  },
+  {
+    path: '/job',
+    title: '定时任务管理',
+    icon: Timer
   },
   {
     path: '/sb',

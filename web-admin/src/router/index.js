@@ -93,9 +93,15 @@ const router = createRouter({
         },
         {
           path: 'daily_train_seat',
-          name: 'dailyTrainSeat',
+          name: 'DailyTrainSeat',
           component: () => import('../views/business/DailyTrainSeat.vue'),
           meta: { title: '每日座位管理' }
+        },
+        {
+          path: 'job',
+          name: 'Job',
+          component: () => import('../views/scheduler/Job.vue'),
+          meta: { title: '定时任务管理' }
         },
       ]
     },
