@@ -15,11 +15,7 @@ public class DailyTrainJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         log.info("生成【每日车次】数据 - 开始");
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        // 思考: 真正生成每日车次的步骤, 流程
         log.info("生成【每日车次】数据 - 结束");
     }
 }
