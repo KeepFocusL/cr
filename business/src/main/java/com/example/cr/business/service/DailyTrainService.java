@@ -1,6 +1,8 @@
 package com.example.cr.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+
+import cn.hutool.core.date.DateUtil;
 import com.example.cr.business.entity.Train;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.business.entity.DailyTrain;
@@ -91,6 +93,7 @@ public class DailyTrainService {
 
     private void genDailyTrain(Date date, Train train){
         // 生成指定日期的每日车厢
+        System.out.println("正在生成日期=" + DateUtil.formatDate(date)+",车次编号 = xxx的【每日车次】数据");
     }
 
 }

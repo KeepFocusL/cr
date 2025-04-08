@@ -1,0 +1,2 @@
+### 测试生成每日车次
+GET http://localhost:8082/admin/daily-train/gen-daily/2025-04-04

@@ -7,8 +7,11 @@ import com.example.cr.business.response.DailyTrainResponse;
 import com.example.cr.business.service.DailyTrainService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import com.example.cr.business.request.DailyTrainRequest;
+
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -22,6 +25,7 @@ public class DailyTrainAdminController {
         PageResponse<DailyTrainResponse> list = dailyTrainService.list(request);
         return R.ok(list);
     }
+
     @PostMapping("save")
     public R<Object> save(@Valid @RequestBody DailyTrainRequest request) {
         dailyTrainService.save(request);
@@ -32,5 +36,11 @@ public class DailyTrainAdminController {
     public R<Integer> delete(@RequestBody List<Long> ids) {
         int result = dailyTrainService.deleteBatch(ids);
         return R.ok(result);
+    }
+
+    @GetMapping("gen-daily/{date}")
+    public R<Object> genDaily(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        dailyTrainService.genDaily(date);
+        return R.ok();
     }
 }
