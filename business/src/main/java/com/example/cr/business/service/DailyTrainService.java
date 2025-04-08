@@ -1,6 +1,7 @@
 package com.example.cr.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.example.cr.business.entity.Train;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.business.entity.DailyTrain;
 import com.example.cr.business.entity.DailyTrainExample;
@@ -13,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.List;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
@@ -74,4 +77,20 @@ public class DailyTrainService {
         criteria.andIdIn(ids);
         return dailyTrainMapper.deleteByExample(dailyTrainExample);
     }
+
+    /**
+     * 生成每日数据
+     * 包含：每日车次、每日火车车站、每日火车车厢、每日座位
+     * @param date 指定日期
+     */
+    public void genDaily(Date date){
+        // 生成指定日期的每日车次
+        //   查出所有的车次
+        //     循环所有的车次调用 genDailyTrain
+    }
+
+    private void genDailyTrain(Date date, Train train){
+        // 生成指定日期的每日车厢
+    }
+
 }
