@@ -1,7 +1,6 @@
 package com.example.cr.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
-
 import cn.hutool.core.date.DateUtil;
 import com.example.cr.business.entity.Train;
 import com.example.cr.common.response.PageResponse;
@@ -89,11 +88,29 @@ public class DailyTrainService {
         // 生成指定日期的每日车次
         //   查出所有的车次
         //     循环所有的车次调用 genDailyTrain
+        genDailyTrain(date, null);
+        genDailyTrainStation(date, null);
+        genDailyTrainCarriage(date, null);
+        genDailyTrainSeat(date, null);
     }
 
     private void genDailyTrain(Date date, Train train){
         // 生成指定日期的每日车厢
-        System.out.println("正在生成日期=" + DateUtil.formatDate(date)+",车次编号 = xxx的【每日车次】数据");
+        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = xxx 的【每日车次】数据");
     }
 
+    private void genDailyTrainStation(Date date, Train train){
+        // 生成指定日期的【每日火车车站】
+        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = xxx 的【每日火车车站】数据");
+    }
+
+    private void genDailyTrainCarriage(Date date, Train train){
+        // 生成指定日期的【每日火车车厢】
+        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = xxx 的【每日火车车厢】数据");
+    }
+
+    private void genDailyTrainSeat(Date date, Train train){
+        // 生成指定日期的【每日座位】
+        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = xxx 的【每日座位】数据");
+    }
 }
