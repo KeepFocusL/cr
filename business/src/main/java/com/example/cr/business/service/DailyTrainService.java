@@ -29,6 +29,9 @@ public class DailyTrainService {
     @Autowired
     DailyTrainMapper dailyTrainMapper;
 
+    @Autowired
+    TrainService trainService;
+
     public PageResponse<DailyTrainResponse> list(DailyTrainListRequest request) {
         DailyTrainExample dailyTrainExample = new DailyTrainExample();
         dailyTrainExample.setOrderByClause("id desc");
@@ -87,30 +90,32 @@ public class DailyTrainService {
     public void genDaily(Date date){
         // 生成指定日期的每日车次
         //   查出所有的车次
-        //     循环所有的车次调用 genDailyTrain
-        genDailyTrain(date, null);
-        genDailyTrainStation(date, null);
-        genDailyTrainCarriage(date, null);
-        genDailyTrainSeat(date, null);
+        List<Train> trains = trainService.selectAll();
+        for (Train train : trains) {
+            genDailyTrain(date, train);
+            genDailyTrainStation(date, train);
+            genDailyTrainCarriage(date, train);
+            genDailyTrainSeat(date, train);
+        }
     }
 
     private void genDailyTrain(Date date, Train train){
-        // 生成指定日期的每日车厢
-        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = xxx 的【每日车次】数据");
+        // 生成指定日期的【每日车次】
+        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = " + train.getCode() + " 的【每日车次】数据");
     }
 
     private void genDailyTrainStation(Date date, Train train){
         // 生成指定日期的【每日火车车站】
-        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = xxx 的【每日火车车站】数据");
+        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = " + train.getCode() + " 的【每日火车车站】数据");
     }
 
     private void genDailyTrainCarriage(Date date, Train train){
         // 生成指定日期的【每日火车车厢】
-        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = xxx 的【每日火车车厢】数据");
+        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = " + train.getCode() + " 的【每日火车车厢】数据");
     }
 
     private void genDailyTrainSeat(Date date, Train train){
         // 生成指定日期的【每日座位】
-        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = xxx 的【每日座位】数据");
+        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = " + train.getCode() + " 的【每日座位】数据");
     }
 }

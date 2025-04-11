@@ -86,4 +86,10 @@ public class TrainService {
         criteria.andIdIn(ids);
         return trainMapper.deleteByExample(trainExample);
     }
+
+    public List<Train> selectAll(){
+        TrainExample trainExample = new TrainExample();
+        trainExample.setOrderByClause("id asc");
+        return trainMapper.selectByExample(trainExample);
+    }
 }
