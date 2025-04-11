@@ -100,6 +100,15 @@ public class DailyTrainService {
     }
 
     private void genDailyTrain(Date date, Train train){
+        // 删除指定车次在指定日期下的所有每日车次
+        System.out.println("先删除日期 = " + DateUtil.formatDate(date) + "，车次编号 = " + train.getCode() + " 的【每日车次】已有数据");
+        DailyTrainExample dailyTrainExample = new DailyTrainExample();
+        dailyTrainExample.createCriteria()
+                .andDateEqualTo(date).
+                andCodeEqualTo(train.getCode());
+        dailyTrainMapper.deleteByExample(dailyTrainExample);
+
+
         // 生成指定日期的【每日车次】
         DailyTrain dailyTrain = BeanUtil.copyProperties(train, DailyTrain.class);
         dailyTrain.setId(SnowflakeUtil.getId());
