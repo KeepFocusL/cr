@@ -101,7 +101,13 @@ public class DailyTrainService {
 
     private void genDailyTrain(Date date, Train train){
         // 生成指定日期的【每日车次】
-        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = " + train.getCode() + " 的【每日车次】数据");
+        DailyTrain dailyTrain = BeanUtil.copyProperties(train, DailyTrain.class);
+        dailyTrain.setId(SnowflakeUtil.getId());
+        dailyTrain.setDate(date);
+        dailyTrain.setCreatedAt(DateTime.now());
+
+        dailyTrainMapper.insert(dailyTrain);
+        System.out.println("生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = " + train.getCode() + " 的【每日车次】数据已完成");
     }
 
     private void genDailyTrainStation(Date date, Train train){
