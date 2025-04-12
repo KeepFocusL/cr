@@ -33,4 +33,10 @@ public class TrainAdminController {
         int result = trainService.deleteBatch(ids);
         return R.ok(result);
     }
+
+    @GetMapping("gen-seat/{trainCode}")
+    public R<Object> genSeat(@PathVariable String trainCode){
+        trainService.genSeat(trainCode);
+        return R.ok();
+    }
 }

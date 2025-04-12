@@ -2,7 +2,7 @@
 import {ref, reactive, onMounted, computed} from 'vue'
 import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
-import {saveTrain, deleteTrain, listTrain, genDailyData} from '@/api/business/train.js'
+import {saveTrain, deleteTrain, listTrain, genDailyData, genSeat} from '@/api/business/train.js'
 
 // 车次列表数据
 const trainList = ref([])
@@ -251,8 +251,31 @@ const handleDailyData = (date) => {
     })
 }
 
-const handleGenSeat = () => {
-  ElMessage.success('自动生成座位成功')
+// 生成座位
+const handleGenSeat = (row) => {
+  ElMessageBox.confirm(
+    `确定要为车次 ${row.code} 生成座位吗？`,
+    '操作确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+  ).then(async () => {
+    try {
+      const res = await genSeat(row.code)
+      if (res.code === 200) {
+        ElMessage.success('座位生成成功')
+      } else {
+        ElMessage.error(res.msg || '座位生成失败')
+      }
+    } catch (error) {
+      console.error('座位生成失败:', error)
+      ElMessage.error('座位生成失败')
+    }
+  }).catch(() => {
+    //console.log('取消操作，不做任何处理');
+  })
 }
 </script>
 
@@ -309,7 +332,7 @@ const handleGenSeat = () => {
           <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
           <el-button type="danger" link @click="handleSingleDelete(row)">删除</el-button>
           <el-button type="primary" link @click="handleDailyData('2025-04-15')">生成每日数据</el-button>
-          <el-button type="primary" link @click="handleGenSeat()">自动生成座位</el-button>
+          <el-button type="primary" link @click="handleGenSeat(row)">自动生成座位</el-button>
         </template>
       </el-table-column>
     </el-table>

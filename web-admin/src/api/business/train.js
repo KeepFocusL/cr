@@ -31,3 +31,7 @@ export function deleteTrain(ids) {
 export function genDailyData(date){
   return http.get(MODULE_PREFIX + '/admin/daily-train/gen-daily/' + date)
 }
+
+export function genSeat(trainCode){
+  return http.get(MODULE_PREFIX + '/admin/train/gen-seat/' + trainCode)
+}

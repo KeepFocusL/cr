@@ -2,4 +2,4 @@
 GET http://localhost:8082/admin/daily-train/gen-daily/2025-04-04
 
 ### 测试生成座位
-GET http://localhost:8082/admin/gen-seat
+GET http://localhost:8082/admin/train/gen-seat/G5115
