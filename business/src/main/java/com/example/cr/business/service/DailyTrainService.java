@@ -38,6 +38,9 @@ public class DailyTrainService {
     @Autowired
     DailyTrainCarriageService dailyTrainCarriageService;
 
+    @Autowired
+    DailyTrainSeatService dailyTrainSeatService;
+
     public PageResponse<DailyTrainResponse> list(DailyTrainListRequest request) {
         DailyTrainExample dailyTrainExample = new DailyTrainExample();
         dailyTrainExample.setOrderByClause("id desc");
@@ -142,5 +145,7 @@ public class DailyTrainService {
     private void genDailyTrainSeat(Date date, Train train){
         // 生成指定日期的【每日座位】
         System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = " + train.getCode() + " 的【每日座位】数据");
+
+        dailyTrainSeatService.genDaily(date, train.getCode());
     }
 }
