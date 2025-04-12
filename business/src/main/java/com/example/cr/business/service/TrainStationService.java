@@ -74,4 +74,11 @@ public class TrainStationService {
         criteria.andIdIn(ids);
         return trainStationMapper.deleteByExample(trainStationExample);
     }
+
+    public List<TrainStation> selectByTrainCode(String trainCode) {
+        TrainStationExample example = new TrainStationExample();
+        example.setOrderByClause("`index` asc");
+        example.createCriteria().andTrainCodeEqualTo(trainCode);
+        return trainStationMapper.selectByExample(example);
+    }
 }
