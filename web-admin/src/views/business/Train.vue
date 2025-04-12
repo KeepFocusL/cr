@@ -250,6 +250,10 @@ const handleDailyData = (date) => {
       ElMessage.error(error.response?.data?.msg || '生成每日数据失败')
     })
 }
+
+const handleGenSeat = () => {
+  ElMessage.success('自动生成座位成功')
+}
 </script>
 
 <template>
@@ -305,6 +309,7 @@ const handleDailyData = (date) => {
           <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
           <el-button type="danger" link @click="handleSingleDelete(row)">删除</el-button>
           <el-button type="primary" link @click="handleDailyData('2025-04-15')">生成每日数据</el-button>
+          <el-button type="primary" link @click="handleGenSeat()">自动生成座位</el-button>
         </template>
       </el-table-column>
     </el-table>
