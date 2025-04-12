@@ -2,7 +2,7 @@
 import {ref, reactive, onMounted, computed} from 'vue'
 import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
-import {saveTrain, deleteTrain, listTrain} from '@/api/business/train.js'
+import {saveTrain, deleteTrain, listTrain, genDailyData} from '@/api/business/train.js'
 
 // 车次列表数据
 const trainList = ref([])
@@ -242,7 +242,13 @@ const handleReset = () => {
 }
 
 const handleDailyData = (date) => {
-  window.alert("生成每日数据成功 = " + date)
+  genDailyData(date)
+    .then((res) => {
+      ElMessage.success('生成每日数据成功')
+    })
+    .catch((error) => {
+      ElMessage.error(error.response?.data?.msg || '生成每日数据失败')
+    })
 }
 </script>
 
