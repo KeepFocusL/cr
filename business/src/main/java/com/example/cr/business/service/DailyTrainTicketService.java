@@ -1,6 +1,8 @@
 package com.example.cr.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DateUtil;
+import com.example.cr.business.entity.TrainStation;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.business.entity.DailyTrainTicket;
 import com.example.cr.business.entity.DailyTrainTicketExample;
@@ -13,6 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
@@ -24,6 +29,9 @@ public class DailyTrainTicketService {
     private static final Logger log = LoggerFactory.getLogger(DailyTrainTicketService.class);
     @Autowired
     DailyTrainTicketMapper dailyTrainTicketMapper;
+
+    @Autowired
+    TrainStationService trainStationService;
 
     public PageResponse<DailyTrainTicketResponse> list(DailyTrainTicketListRequest request) {
         DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();
@@ -79,5 +87,59 @@ public class DailyTrainTicketService {
         DailyTrainTicketExample.Criteria criteria = dailyTrainTicketExample.createCriteria();
         criteria.andIdIn(ids);
         return dailyTrainTicketMapper.deleteByExample(dailyTrainTicketExample);
+    }
+
+    public void genDaily(Date date, String trainCode) {
+        log.debug("生成日期【{}】车次【{}】的【余票信息】数据 - 开始", DateUtil.formatDate(date), trainCode);
+        // 删除已有的相关数据
+        DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();
+        dailyTrainTicketExample.createCriteria()
+                .andDateEqualTo(date)
+                .andTrainCodeEqualTo(trainCode);
+        dailyTrainTicketMapper.deleteByExample(dailyTrainTicketExample);
+        log.debug("先删除日期【{}】车次【{}】的已有【余票信息】数据", DateUtil.formatDate(date), trainCode);
+
+        // 查询途径的车站信息
+        List<TrainStation> trainStations = trainStationService.selectByTrainCode(trainCode);
+        log.debug("车次【{}】的车站总数={}", trainCode, trainStations.size());
+
+        for (int i = 0; i < trainStations.size(); i++) {
+            // 第一层循环 得到出发站
+            TrainStation trainStationStart = trainStations.get(i);
+            for (int j = (i + 1); j < trainStations.size(); j++) {
+                // 第二层循环 得到到达站
+                TrainStation trainStationEnd = trainStations.get(j);
+
+                // 构造余票信息数据
+                DailyTrainTicket dailyTrainTicket = new DailyTrainTicket();
+                dailyTrainTicket.setId(SnowflakeUtil.getId());
+                dailyTrainTicket.setDate(date);
+                dailyTrainTicket.setTrainCode(trainCode);
+                dailyTrainTicket.setStart(trainStationStart.getName());
+                dailyTrainTicket.setStartPinyin(trainStationStart.getNamePinyin());
+                dailyTrainTicket.setStartTime(trainStationStart.getOutTime());
+                dailyTrainTicket.setStartIndex(trainStationStart.getIndex());
+
+
+                dailyTrainTicket.setEnd(trainStationEnd.getName());
+                dailyTrainTicket.setEndPinyin(trainStationEnd.getNamePinyin());
+                dailyTrainTicket.setEndTime(trainStationEnd.getOutTime());
+                dailyTrainTicket.setEndIndex(trainStationEnd.getIndex());
+
+                dailyTrainTicket.setYdz(0);
+                dailyTrainTicket.setYdzPrice(BigDecimal.ZERO);
+                dailyTrainTicket.setEdz(0);
+                dailyTrainTicket.setEdzPrice(BigDecimal.ZERO);
+                dailyTrainTicket.setRw(0);
+                dailyTrainTicket.setRwPrice(BigDecimal.ZERO);
+                dailyTrainTicket.setYw(0);
+                dailyTrainTicket.setYwPrice(BigDecimal.ZERO);
+
+                dailyTrainTicket.setCreatedAt(DateTime.now());
+                dailyTrainTicket.setUpdatedAt(null);
+
+                dailyTrainTicketMapper.insert(dailyTrainTicket);
+            }
+        }
     }
 }

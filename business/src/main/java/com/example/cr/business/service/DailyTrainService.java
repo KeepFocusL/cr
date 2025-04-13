@@ -41,6 +41,9 @@ public class DailyTrainService {
     @Autowired
     DailyTrainSeatService dailyTrainSeatService;
 
+    @Autowired
+    DailyTrainTicketService dailyTrainTicketService;
+
     public PageResponse<DailyTrainResponse> list(DailyTrainListRequest request) {
         DailyTrainExample dailyTrainExample = new DailyTrainExample();
         dailyTrainExample.setOrderByClause("id desc");
@@ -93,7 +96,7 @@ public class DailyTrainService {
 
     /**
      * 生成每日数据
-     * 包含：每日车次、每日火车车站、每日火车车厢、每日座位
+     * 包含：每日车次、每日火车车站、每日火车车厢、每日座位、余票信息
      * @param date 指定日期
      */
     public void genDaily(Date date){
@@ -105,6 +108,7 @@ public class DailyTrainService {
             genDailyTrainStation(date, train);
             genDailyTrainCarriage(date, train);
             genDailyTrainSeat(date, train);
+            genDailyTrainTicket(date, train);
         }
     }
 
@@ -147,5 +151,12 @@ public class DailyTrainService {
         System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = " + train.getCode() + " 的【每日座位】数据");
 
         dailyTrainSeatService.genDaily(date, train.getCode());
+    }
+
+    private void genDailyTrainTicket(Date date, Train train) {
+        // 生成指定日期的【余票信息】
+        System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = " + train.getCode() + " 的【余票信息】数据");
+
+        dailyTrainTicketService.genDaily(date, train.getCode());
     }
 }
