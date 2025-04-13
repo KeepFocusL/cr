@@ -3,6 +3,9 @@ import {ref, reactive, onMounted, computed} from 'vue'
 import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {saveDailyTrainTicket, deleteDailyTrainTicket, listDailyTrainTicket} from '@/api/business/dailyTrainTicket.js'
+import TrainSelect from "@/components/TrainSelect.vue";
+import StationSelect from "@/components/StationSelect.vue";
+import {pinyin} from "pinyin-pro";
 
 // 余票信息列表数据
 const dailyTrainTicketList = ref([])
@@ -286,6 +289,24 @@ const handleReset = () => {
   searchForm.keyword = ''
   handleSearch()
 }
+// 监听车站变化，自动填充拼音
+const handleStartChange = (value) => {
+  if (!value) {
+    dailyTrainTicketForm.startPinyin = ''
+    return
+  }
+  dailyTrainTicketForm.startPinyin = pinyin(value, { toneType: 'none', type: 'string' }).replace(/\s/g, '')
+}
+
+// 监听车站变化，自动填充拼音
+const handleEndChange = (value) => {
+  if (!value) {
+    dailyTrainTicketForm.endPinyin = ''
+    return
+  }
+  dailyTrainTicketForm.endPinyin = pinyin(value, { toneType: 'none', type: 'string' }).replace(/\s/g, '')
+}
+
 </script>
 
 <template>
@@ -389,17 +410,12 @@ const handleReset = () => {
           />
         </el-form-item>
         <el-form-item label="车次编号" prop="trainCode">
-          <el-input
-            v-model="dailyTrainTicketForm.trainCode"
-            placeholder="请输入车次编号"
-            clearable
-          />
+          <TrainSelect v-model="dailyTrainTicketForm.trainCode"/>
         </el-form-item>
         <el-form-item label="出发站" prop="start">
-          <el-input
+          <StationSelect
             v-model="dailyTrainTicketForm.start"
-            placeholder="请输入出发站"
-            clearable
+            @update:modelValue="handleStartChange"
           />
         </el-form-item>
         <el-form-item label="出发站拼音" prop="startPinyin">
@@ -420,10 +436,9 @@ const handleReset = () => {
           <el-input-number v-model="dailyTrainTicketForm.startIndex" />
         </el-form-item>
         <el-form-item label="到达站" prop="end">
-          <el-input
+          <StationSelect
             v-model="dailyTrainTicketForm.end"
-            placeholder="请输入到达站"
-            clearable
+            @update:modelValue="handleEndChange"
           />
         </el-form-item>
         <el-form-item label="到达站拼音" prop="endPinyin">
