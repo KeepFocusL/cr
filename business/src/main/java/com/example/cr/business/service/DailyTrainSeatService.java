@@ -1,7 +1,9 @@
 package com.example.cr.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.StrUtil;
 import com.example.cr.business.entity.TrainSeat;
+import com.example.cr.business.entity.TrainStation;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.business.entity.DailyTrainSeat;
 import com.example.cr.business.entity.DailyTrainSeatExample;
@@ -31,6 +33,9 @@ public class DailyTrainSeatService {
 
     @Autowired
     TrainSeatService trainSeatService;
+
+    @Autowired
+    TrainStationService trainStationService;
 
     public PageResponse<DailyTrainSeatResponse> list(DailyTrainSeatListRequest request) {
         DailyTrainSeatExample dailyTrainSeatExample = new DailyTrainSeatExample();
@@ -92,6 +97,11 @@ public class DailyTrainSeatService {
         // 2、找到对应基础数据
         List<TrainSeat> trainSeats = trainSeatService.selectByTrainCode(trainCode);
 
+        // 查出当前车次经过几个车站
+        List<TrainStation> trainStations = trainStationService.selectByTrainCode(trainCode);
+        // 要拼成 车站个数-1 的 0
+        String sell = StrUtil.fillBefore("", '0', trainStations.size() - 1);
+
         // 3、在对应基础数据上增加 date 数据
         for (TrainSeat trainSeat : trainSeats) {
             DailyTrainSeat dailyTrainSeat = BeanUtil.copyProperties(trainSeat, DailyTrainSeat.class);
@@ -99,7 +109,7 @@ public class DailyTrainSeatService {
             dailyTrainSeat.setId(SnowflakeUtil.getId());
             dailyTrainSeat.setCreatedAt(DateTime.now());
             dailyTrainSeat.setUpdatedAt(null);
-            dailyTrainSeat.setSell("0");
+            dailyTrainSeat.setSell(sell);
             dailyTrainSeatMapper.insert(dailyTrainSeat);
         }
     }
