@@ -3,3 +3,6 @@ GET http://localhost:8082/test
 
 ### 测试 test 接口 - 经过网关 gateway
 GET http://localhost:8000/b/test
+
+### 车次管理 - 关键词搜索
+GET http://localhost:8082/admin/train/list?page=1&size=20&keyword=G
