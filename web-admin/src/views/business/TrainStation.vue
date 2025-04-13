@@ -5,6 +5,7 @@ import {ElMessage, ElMessageBox} from 'element-plus'
 import {saveTrainStation, deleteTrainStation, listTrainStation} from '@/api/business/trainStation.js'
 import TrainSelect from "@/components/TrainSelect.vue";
 import StationSelect from "@/components/StationSelect.vue";
+import {pinyin} from "pinyin-pro";
 
 // 火车车站列表数据
 const trainStationList = ref([])
@@ -125,18 +126,18 @@ const handleDelete = async (ids) => {
 // 处理单个删除 - 二次确认
 const handleSingleDelete = (row) => {
   ElMessageBox.confirm(
-          '确定要删除火车车站 ' + row.id + ' 吗？',
-          '删除确认',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
+    '确定要删除火车车站 ' + row.id + ' 吗？',
+    '删除确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
   )
-          .then(() => handleDelete([row.id]))
-          .catch(() => {
-            console.log('取消删除，不做任何操作')
-          })
+    .then(() => handleDelete([row.id]))
+    .catch(() => {
+      console.log('取消删除，不做任何操作')
+    })
 }
 
 // 计算属性：检查是否有选中的行
@@ -153,18 +154,18 @@ const handleBatchDelete = async () => {
   }
   // 弹出确认对话框
   ElMessageBox.confirm(
-          '确定要删除选中的 ' + selectedRows.length + ' 记录吗？',
-          '删除确认',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
+    '确定要删除选中的 ' + selectedRows.length + ' 记录吗？',
+    '删除确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
   )
-          .then(() => handleDelete(selectedRows.map(item => item.id)))
-          .catch(() => {
-            console.log('取消删除，不做任何操作')
-          })
+    .then(() => handleDelete(selectedRows.map(item => item.id)))
+    .catch(() => {
+      console.log('取消删除，不做任何操作')
+    })
 }
 
 const tableLoading = ref(false)
@@ -238,6 +239,44 @@ const handleReset = () => {
   searchForm.keyword = ''
   handleSearch()
 }
+
+// 监听车站变化，自动填充拼音
+const handleStartChange = (value) => {
+  if (!value) {
+    trainStationForm.namePinyin = ''
+    return
+  }
+  trainStationForm.namePinyin = pinyin(value, { toneType: 'none', type: 'string' }).replace(/\s/g, '')
+}
+
+// 自动计算停站时长
+const calculateStopTime = () => {
+  if (trainStationForm.inTime && trainStationForm.outTime) {
+    // 解析时间部分
+    const [inHour, inMin, inSec] = trainStationForm.inTime.split(':').map(Number)
+    const [outHour, outMin, outSec] = trainStationForm.outTime.split(':').map(Number)
+
+    // 转换为秒数进行计算
+    const inSeconds = inHour * 3600 + inMin * 60 + inSec
+    const outSeconds = outHour * 3600 + outMin * 60 + outSec
+    const diffSeconds = outSeconds - inSeconds
+
+    if (diffSeconds < 0) {
+      ElMessage.warning('出站时间不能早于进站时间')
+      trainStationForm.outTime = ''
+      trainStationForm.stopTime = ''
+      return
+    }
+
+    // 转换为 HH:mm:ss 格式
+    const hours = Math.floor(diffSeconds / 3600)
+    const minutes = Math.floor((diffSeconds % 3600) / 60)
+    const seconds = diffSeconds % 60
+    trainStationForm.stopTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+  } else {
+    trainStationForm.stopTime = ''
+  }
+}
 </script>
 
 <template>
@@ -253,9 +292,9 @@ const handleReset = () => {
         <el-form :inline="true" :model="searchForm" @submit.prevent>
           <el-form-item class="mb0">
             <el-input
-                    v-model="searchForm.keyword"
-                    placeholder="请输入关键词"
-                    clearable
+              v-model="searchForm.keyword"
+              placeholder="请输入关键词"
+              clearable
             />
           </el-form-item>
           <el-form-item class="mb0">
@@ -331,6 +370,7 @@ const handleReset = () => {
         <el-form-item label="站名" prop="name">
           <StationSelect
             v-model="trainStationForm.name"
+            @update:modelValue="handleStartChange"
           />
         </el-form-item>
         <el-form-item label="站名拼音" prop="namePinyin">
@@ -345,6 +385,7 @@ const handleReset = () => {
             v-model="trainStationForm.inTime"
             placeholder="请输入进站时间"
             value-format="HH:mm:ss"
+            @change="calculateStopTime"
           />
         </el-form-item>
         <el-form-item label="出站时间" prop="outTime">
@@ -352,6 +393,7 @@ const handleReset = () => {
             v-model="trainStationForm.outTime"
             placeholder="请输入出站时间"
             value-format="HH:mm:ss"
+            @change="calculateStopTime"
           />
         </el-form-item>
         <el-form-item label="停站时长" prop="stopTime">
@@ -359,6 +401,7 @@ const handleReset = () => {
             v-model="trainStationForm.stopTime"
             placeholder="请输入停站时长"
             value-format="HH:mm:ss"
+            disabled
           />
         </el-form-item>
         <el-form-item label="里程（公里）" prop="km">
