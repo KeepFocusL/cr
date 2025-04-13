@@ -103,6 +103,12 @@ const router = createRouter({
           component: () => import('../views/scheduler/Job.vue'),
           meta: { title: '定时任务管理' }
         },
+        {
+          path: 'daily-train-ticket',
+          name: 'DailyTrainTicket',
+          component: () => import('../views/business/DailyTrainTicket.vue'),
+          meta: { title: '余票信息' }
+        }
       ]
     },
   ],

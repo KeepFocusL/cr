@@ -250,6 +250,11 @@ const menuConfig = [
         path: '/daily_train_seat',
         title: '每日座位',
         icon: Ticket
+      },
+      {
+        path: '/daily-train-ticket',
+        title: '余票信息',
+        icon: Ticket
       }
     ]
   },
