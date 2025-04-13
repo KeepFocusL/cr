@@ -4,6 +4,7 @@ import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {saveTrain, deleteTrain, listTrain, genDailyData, genSeat} from '@/api/business/train.js'
 import StationSelect from "@/components/StationSelect.vue";
+import {pinyin} from "pinyin-pro";
 
 // 车次列表数据
 const trainList = ref([])
@@ -278,6 +279,24 @@ const handleGenSeat = (row) => {
     //console.log('取消操作，不做任何处理');
   })
 }
+
+// 监听始发站变化，自动填充拼音
+const handleStartChange = (value) => {
+  if (!value) {
+    trainForm.startPinyin = ''
+    return
+  }
+  trainForm.startPinyin = pinyin(value, { toneType: 'none', type: 'string' }).replace(/\s/g, '')
+}
+
+// 监听始发站变化，自动填充拼音
+const handleEndChange = (value) => {
+  if (!value) {
+    trainForm.endPinyin = ''
+    return
+  }
+  trainForm.endPinyin = pinyin(value, { toneType: 'none', type: 'string' }).replace(/\s/g, '')
+}
 </script>
 
 <template>
@@ -392,6 +411,7 @@ const handleGenSeat = (row) => {
         <el-form-item label="始发站" prop="start">
           <StationSelect
             v-model="trainForm.start"
+            @update:modelValue="handleStartChange"
           />
         </el-form-item>
         <el-form-item label="始发站拼音" prop="startPinyin">
@@ -411,6 +431,7 @@ const handleGenSeat = (row) => {
         <el-form-item label="终点站" prop="end">
           <StationSelect
             v-model="trainForm.end"
+            @update:modelValue="handleEndChange"
           />
         </el-form-item>
         <el-form-item label="终点站拼音" prop="endPinyin">
