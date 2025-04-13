@@ -3,6 +3,7 @@ import {ref, reactive, onMounted, computed} from 'vue'
 import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {saveTrainStation, deleteTrainStation, listTrainStation} from '@/api/business/trainStation.js'
+import {listTrain} from "@/api/business/train.js";
 
 // 火车车站列表数据
 const trainStationList = ref([])
@@ -236,6 +237,39 @@ const handleReset = () => {
   searchForm.keyword = ''
   handleSearch()
 }
+
+// 添加车次选择相关的数据
+const trainCodeOptions = ref([])
+const trainCodeLoading = ref(false)
+
+// 远程搜索车次的方法
+const handleTrainCodeSearch = async (query) => {
+  if (!query) {
+    trainCodeOptions.value = []
+    return
+  }
+
+  trainCodeLoading.value = true
+  try {
+    const res = await listTrain({
+      page: 1,
+      size: 20,
+      keyword: query // 使用关键字搜索
+    })
+    if (res.code === 200) {
+      trainCodeOptions.value = res.data.list.map(item => ({
+        value: item.code,
+        label: `${item.code} (${item.start} -> ${item.end})`,
+        start: item.start,
+        end: item.end
+      }))
+    }
+  } catch (error) {
+    console.error('获取车次列表失败:', error)
+  } finally {
+    trainCodeLoading.value = false
+  }
+}
 </script>
 
 <template>
@@ -321,11 +355,28 @@ const handleReset = () => {
         status-icon
       >
         <el-form-item label="车次编号" prop="trainCode">
-          <el-input
+          <el-select
             v-model="trainStationForm.trainCode"
-            placeholder="请输入车次编号"
-            clearable
-          />
+            filterable
+            remote
+            reserve-keyword
+            placeholder="不知道车次？可以输入起始站或终点站搜索车次"
+            :remote-method="handleTrainCodeSearch"
+            :loading="trainCodeLoading"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in trainCodeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+              <span style="float: left">{{ item.value }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">
+                {{ item.start }} -> {{ item.end }}
+              </span>
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="站序" prop="index">
           <el-input-number v-model="trainStationForm.index" />
