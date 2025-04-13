@@ -3,6 +3,7 @@ import {ref, reactive, onMounted, computed} from 'vue'
 import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {saveTrainSeat, deleteTrainSeat, listTrainSeat} from '@/api/business/trainSeat.js'
+import TrainSelect from "@/components/TrainSelect.vue";
 
 // 车厢座位列表数据
 const trainSeatList = ref([])
@@ -325,11 +326,7 @@ const handleReset = () => {
         status-icon
       >
         <el-form-item label="车次编号" prop="trainCode">
-          <el-input
-            v-model="trainSeatForm.trainCode"
-            placeholder="请输入车次编号"
-            clearable
-          />
+          <TrainSelect v-model="trainSeatForm.trainCode"/>
         </el-form-item>
         <el-form-item label="厢序" prop="carriageIndex">
           <el-input-number v-model="trainSeatForm.carriageIndex" />
