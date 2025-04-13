@@ -4,6 +4,7 @@ import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {saveTrainStation, deleteTrainStation, listTrainStation} from '@/api/business/trainStation.js'
 import TrainSelect from "@/components/TrainSelect.vue";
+import StationSelect from "@/components/StationSelect.vue";
 
 // 火车车站列表数据
 const trainStationList = ref([])
@@ -328,10 +329,8 @@ const handleReset = () => {
           <el-input-number v-model="trainStationForm.index" />
         </el-form-item>
         <el-form-item label="站名" prop="name">
-          <el-input
+          <StationSelect
             v-model="trainStationForm.name"
-            placeholder="请输入站名"
-            clearable
           />
         </el-form-item>
         <el-form-item label="站名拼音" prop="namePinyin">

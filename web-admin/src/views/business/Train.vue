@@ -3,6 +3,7 @@ import {ref, reactive, onMounted, computed} from 'vue'
 import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {saveTrain, deleteTrain, listTrain, genDailyData, genSeat} from '@/api/business/train.js'
+import StationSelect from "@/components/StationSelect.vue";
 
 // 车次列表数据
 const trainList = ref([])
@@ -389,10 +390,8 @@ const handleGenSeat = (row) => {
           </el-select>
         </el-form-item>
         <el-form-item label="始发站" prop="start">
-          <el-input
+          <StationSelect
             v-model="trainForm.start"
-            placeholder="请输入始发站"
-            clearable
           />
         </el-form-item>
         <el-form-item label="始发站拼音" prop="startPinyin">
@@ -410,10 +409,8 @@ const handleGenSeat = (row) => {
           />
         </el-form-item>
         <el-form-item label="终点站" prop="end">
-          <el-input
+          <StationSelect
             v-model="trainForm.end"
-            placeholder="请输入终点站"
-            clearable
           />
         </el-form-item>
         <el-form-item label="终点站拼音" prop="endPinyin">
