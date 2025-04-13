@@ -9,7 +9,7 @@ const router = useRouter()
 
 const userStore = useUserStore();
 
-const mobile = ref('18123456789')
+const mobile = ref('18012345678')
 const code = ref('')
 
 const isLoginDisabled = computed(() => {
