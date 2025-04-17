@@ -3,9 +3,6 @@ import {ref, reactive, onMounted, computed} from 'vue'
 import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
 import {saveDailyTrainTicket, deleteDailyTrainTicket, listDailyTrainTicket} from '@/api/business/dailyTrainTicket.js'
-import TrainSelect from "@/components/TrainSelect.vue";
-import StationSelect from "@/components/StationSelect.vue";
-import {pinyin} from "pinyin-pro";
 
 // 余票信息列表数据
 const dailyTrainTicketList = ref([])
@@ -15,25 +12,25 @@ const dialogVisible = ref(false)
 
 // 新增余票信息表单数据
 const dailyTrainTicketForm = reactive({
-  id: 0,
-  date: null,
-  trainCode: null,
-  start: null,
-  startPinyin: null,
-  startTime: null,
-  startIndex: 0,
-  end: null,
-  endPinyin: null,
-  endTime: null,
-  endIndex: 0,
-  ydz: 0,
-  ydzPrice: null,
-  edz: 0,
-  edzPrice: null,
-  rw: 0,
-  rwPrice: null,
-  yw: 0,
-  ywPrice: null,
+  id: '',
+  date: '',
+  trainCode: '',
+  start: '',
+  startPinyin: '',
+  startTime: '',
+  startIndex: '',
+  end: '',
+  endPinyin: '',
+  endTime: '',
+  endIndex: '',
+  ydz: '',
+  ydzPrice: '',
+  edz: '',
+  edzPrice: '',
+  rw: '',
+  rwPrice: '',
+  yw: '',
+  ywPrice: '',
 })
 
 // 表单规则
@@ -95,32 +92,31 @@ const rules = {
 }
 
 const formRef = ref(null)
-const tableRef = ref(null)
 
 const handleAdd = () => {
   dialogVisible.value = true
 }
 
 const resetForm = () => {
-  dailyTrainTicketForm.id = 0
-  dailyTrainTicketForm.date = null
-  dailyTrainTicketForm.trainCode = null
-  dailyTrainTicketForm.start = null
-  dailyTrainTicketForm.startPinyin = null
-  dailyTrainTicketForm.startTime = null
-  dailyTrainTicketForm.startIndex = 0
-  dailyTrainTicketForm.end = null
-  dailyTrainTicketForm.endPinyin = null
-  dailyTrainTicketForm.endTime = null
-  dailyTrainTicketForm.endIndex = 0
-  dailyTrainTicketForm.ydz = 0
-  dailyTrainTicketForm.ydzPrice = null
-  dailyTrainTicketForm.edz = 0
-  dailyTrainTicketForm.edzPrice = null
-  dailyTrainTicketForm.rw = 0
-  dailyTrainTicketForm.rwPrice = null
-  dailyTrainTicketForm.yw = 0
-  dailyTrainTicketForm.ywPrice = null
+  dailyTrainTicketForm.id = ''
+  dailyTrainTicketForm.date = ''
+  dailyTrainTicketForm.trainCode = ''
+  dailyTrainTicketForm.start = ''
+  dailyTrainTicketForm.startPinyin = ''
+  dailyTrainTicketForm.startTime = ''
+  dailyTrainTicketForm.startIndex = ''
+  dailyTrainTicketForm.end = ''
+  dailyTrainTicketForm.endPinyin = ''
+  dailyTrainTicketForm.endTime = ''
+  dailyTrainTicketForm.endIndex = ''
+  dailyTrainTicketForm.ydz = ''
+  dailyTrainTicketForm.ydzPrice = ''
+  dailyTrainTicketForm.edz = ''
+  dailyTrainTicketForm.edzPrice = ''
+  dailyTrainTicketForm.rw = ''
+  dailyTrainTicketForm.rwPrice = ''
+  dailyTrainTicketForm.yw = ''
+  dailyTrainTicketForm.ywPrice = ''
 }
 
 const submitForm = async () => {
@@ -133,7 +129,7 @@ const submitForm = async () => {
       ElMessage.success(dailyTrainTicketForm.id ? '编辑成功' : '添加成功')
       dialogVisible.value = false
       resetForm()
-      // 刷新余票信息列表
+      // 刷新乘客列表
       pagination.page = 1
       await getDailyTrainTicketList()
     } else {
@@ -141,7 +137,7 @@ const submitForm = async () => {
       ElMessage.error(res.msg || (dailyTrainTicketForm.id ? '编辑余票信息失败' : '添加余票信息失败'))
     }
   } catch (error) {
-    ElMessage.error(error.response?.data?.msg || (dailyTrainTicketForm.id ? '编辑余票信息失败' : '添加余票信息失败'))
+    ElMessage.error(error.response.data.msg || (dailyTrainTicketForm.id ? '编辑余票信息失败' : '添加余票信息失败'))
   }
 }
 
@@ -150,89 +146,49 @@ const handleEdit = (row) => {
   dialogVisible.value = true
 }
 
+const handleDelete = (row) => {
+  ElMessageBox.confirm(
+    '确定要删除余票信息 ' + row.id + ' 吗？',
+    '删除确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+  ).then(async () => {
+    try {
+      const res = await deleteDailyTrainTicket(row.id)
+      if (res.code === 200) {
+        ElMessage.success('删除成功')
+        // 如果当前页只有一条数据且不是第一页，删除后自动跳转到上一页
+        if (dailyTrainTicketList.value.length === 1 && pagination.page > 1) {
+          pagination.page--
+        }
+        await getDailyTrainTicketList()
+      } else {
+        ElMessage.error(res.msg || '删除失败')
+      }
+    } catch (error) {
+      console.error('删除余票信息失败:', error)
+      ElMessage.error('删除失败')
+    }
+  }).catch(() => {
+    // 取消删除，不做任何操作
+    console.log('取消删除，不做任何操作')
+  })
+}
+
 const dialogTitle = computed(() => {
   return dailyTrainTicketForm.id ? '编辑余票信息' : '新增余票信息'
 })
 
-// 删除余票信息
-const handleDelete = async (ids) => {
-  try {
-    const res = await deleteDailyTrainTicket(ids)
-    if (res.code === 200) {
-      ElMessage.success('删除成功')
-      // 如果当前页只剩要被删除的条数且不是第一页，删除后自动跳转到上一页
-      if (dailyTrainTicketList.value.length === ids.length && pagination.page > 1) {
-        pagination.page--
-      }
-      await getDailyTrainTicketList()
-    } else {
-      ElMessage.error(res.msg || '删除失败')
-    }
-  } catch (error) {
-    ElMessage.error(error.response?.data?.msg || '删除失败')
-  }
-}
-
-// 处理单个删除 - 二次确认
-const handleSingleDelete = (row) => {
-  ElMessageBox.confirm(
-          '确定要删除余票信息 ' + row.id + ' 吗？',
-          '删除确认',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-  )
-          .then(() => handleDelete([row.id]))
-          .catch(() => {
-            console.log('取消删除，不做任何操作')
-          })
-}
-
-// 计算属性：检查是否有选中的行
-const hasSelectedRows = computed(() => {
-  return tableRef.value ? tableRef.value.getSelectionRows().length > 0 : false
-})
-
-// 处理批量删除 - 二次确认
-const handleBatchDelete = async () => {
-  const selectedRows = tableRef.value.getSelectionRows()
-  if (!selectedRows || selectedRows.length === 0) {
-    ElMessage.warning('请先选择要删除的记录')
-    return
-  }
-  // 弹出确认对话框
-  ElMessageBox.confirm(
-          '确定要删除选中的 ' + selectedRows.length + ' 记录吗？',
-          '删除确认',
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }
-  )
-          .then(() => handleDelete(selectedRows.map(item => item.id)))
-          .catch(() => {
-            console.log('取消删除，不做任何操作')
-          })
-}
-
 const tableLoading = ref(false)
-
-// 搜索表单
-const searchForm = reactive({
-  keyword: ''  // 搜索关键字
-})
 
 // 获取余票信息列表数据
 const getDailyTrainTicketList = async () => {
   tableLoading.value = true
   try {
-    const res = await listDailyTrainTicket({
-      ...pagination,
-      keyword: searchForm.keyword
-    })
+    const res = await listDailyTrainTicket(pagination)
     if (res.code === 200) {
       dailyTrainTicketList.value = res.data.list
       pagination.total = res.data.total
@@ -240,7 +196,8 @@ const getDailyTrainTicketList = async () => {
       ElMessage.error(res.msg || '获取余票信息列表失败')
     }
   } catch (error) {
-    ElMessage.error(error.response?.data?.msg || '获取余票信息列表失败')
+    console.error('获取余票信息列表失败:', error)
+    ElMessage.error('获取余票信息列表失败')
   } finally {
     tableLoading.value = false
   }
@@ -254,7 +211,7 @@ onMounted(() => {
 // 分页相关数据
 const pagination = reactive({
   // 每页显示的数据条数
-  size: 20,
+  size: 10,
   // 当前页码，从1开始
   page: 1,
   // 总数据条数，会在获取数据时更新
@@ -278,35 +235,38 @@ const handleRefresh = () => {
   getDailyTrainTicketList()
 }
 
-// 处理搜索
-const handleSearch = () => {
-  pagination.page = 1  // 重置到第一页
-  getDailyTrainTicketList()
-}
-
-// 重置搜索
-const handleReset = () => {
-  searchForm.keyword = ''
-  handleSearch()
-}
-// 监听车站变化，自动填充拼音
-const handleStartChange = (value) => {
-  if (!value) {
-    dailyTrainTicketForm.startPinyin = ''
-    return
+// 计算行程时间
+const calculateDuration = (startTime, endTime) => {
+  const getMinutes = (time) => {
+    const [hours, minutes, seconds] = time.split(':').map(Number)
+    return hours * 3600 + minutes * 60 + seconds
   }
-  dailyTrainTicketForm.startPinyin = pinyin(value, { toneType: 'none', type: 'string' }).replace(/\s/g, '')
-}
 
-// 监听车站变化，自动填充拼音
-const handleEndChange = (value) => {
-  if (!value) {
-    dailyTrainTicketForm.endPinyin = ''
-    return
+  let startMinutes = getMinutes(startTime)
+  let endMinutes = getMinutes(endTime)
+
+  // 如果结束时间小于开始时间，说明是跨天，需要加24小时
+  if (endMinutes < startMinutes) {
+    endMinutes += 24 * 3600
   }
-  dailyTrainTicketForm.endPinyin = pinyin(value, { toneType: 'none', type: 'string' }).replace(/\s/g, '')
+
+  // 计算时间差
+  const diffSeconds = endMinutes - startMinutes
+  const hours = Math.floor(diffSeconds / 3600)
+  const minutes = Math.floor((diffSeconds % 3600) / 60)
+  const seconds = diffSeconds % 60
+
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 }
 
+// 判断是否跨天
+const isNextDay = (startTime, endTime) => {
+  const getMinutes = (time) => {
+    const [hours, minutes, seconds] = time.split(':').map(Number)
+    return hours * 3600 + minutes * 60 + seconds
+  }
+  return getMinutes(endTime) < getMinutes(startTime)
+}
 </script>
 
 <template>
@@ -315,58 +275,84 @@ const handleEndChange = (value) => {
     <div class="top-tools">
       <div class="left">
         <el-button type="primary" :icon="Plus" @click="handleAdd">新增余票信息</el-button>
-        <el-button type="danger" @click="handleBatchDelete" :disabled="!hasSelectedRows">批量删除</el-button>
         <el-button :icon="Refresh" @click="handleRefresh">刷新</el-button>
       </div>
-      <div class="right">
-        <el-form :inline="true" :model="searchForm" @submit.prevent>
-          <el-form-item class="mb0">
-            <el-input
-                    v-model="searchForm.keyword"
-                    placeholder="请输入关键词"
-                    clearable
-            />
-          </el-form-item>
-          <el-form-item class="mb0">
-            <el-button type="primary" @click="handleSearch">查询</el-button>
-            <el-button @click="handleReset">重置</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
+      <div class="right"></div>
     </div>
 
     <!-- 余票信息列表 -->
     <el-table
-      ref="tableRef"
       :data="dailyTrainTicketList"
       v-loading="tableLoading"
-      :table-layout="'auto'"
       style="width: 100%"
       border
     >
-      <el-table-column type="selection"></el-table-column>
-      <el-table-column prop="date" label="日期"/>
-      <el-table-column prop="trainCode" label="车次编号"/>
-      <el-table-column prop="start" label="出发站"/>
-      <el-table-column prop="startPinyin" label="出发站拼音"/>
-      <el-table-column prop="startTime" label="出发时间"/>
-      <el-table-column prop="startIndex" label="出发站序"/>
-      <el-table-column prop="end" label="到达站"/>
-      <el-table-column prop="endPinyin" label="到达站拼音"/>
-      <el-table-column prop="endTime" label="到站时间"/>
-      <el-table-column prop="endIndex" label="到站站序"/>
-      <el-table-column prop="ydz" label="一等座余票"/>
-      <el-table-column prop="ydzPrice" label="一等座票价"/>
-      <el-table-column prop="edz" label="二等座余票"/>
-      <el-table-column prop="edzPrice" label="二等座票价"/>
-      <el-table-column prop="rw" label="软卧余票"/>
-      <el-table-column prop="rwPrice" label="软卧票价"/>
-      <el-table-column prop="yw" label="硬卧余票"/>
-      <el-table-column prop="ywPrice" label="硬卧票价"/>
-      <el-table-column label="操作">
+      <el-table-column prop="date" label="日期" width="120"/>
+      <el-table-column prop="trainCode" label="车次编号" width="100"/>
+      <el-table-column label="车站" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line">
+            <div data-label="出发站：">{{ row.start }}</div>
+            <div data-label="到达站：">{{ row.end }}</div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="时间" min-width="150">
+        <template #default="{ row }">
+          <div class="two-line">
+            <div data-label="出发时间：">{{ row.startTime }}</div>
+            <div data-label="到达时间：">{{ row.endTime }}</div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="历时" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line">
+            <div data-label="总时长：">{{ calculateDuration(row.startTime, row.endTime) }}</div>
+            <div data-label="到达日：">{{ isNextDay(row.startTime, row.endTime) ? '次日到达' : '当日到达' }}</div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="一等座" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line" v-if="row.ydz !== -1">
+            <div data-label="余票：">{{ row.ydz }}</div>
+            <div data-label="票价：">{{ row.ydzPrice }}¥</div>
+          </div>
+          <div class="unavailable" v-else>--</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="二等座" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line" v-if="row.edz !== -1">
+            <div data-label="余票：">{{ row.edz }}</div>
+            <div data-label="票价：">{{ row.edzPrice }}¥</div>
+          </div>
+          <div class="unavailable" v-else>--</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="软卧" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line" v-if="row.rw !== -1">
+            <div data-label="余票：">{{ row.rw }}</div>
+            <div data-label="票价：">{{ row.rwPrice }}¥</div>
+          </div>
+          <div class="unavailable" v-else>--</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="硬卧" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line" v-if="row.yw !== -1">
+            <div data-label="余票：">{{ row.yw }}</div>
+            <div data-label="票价：">{{ row.ywPrice }}¥</div>
+          </div>
+          <div class="unavailable" v-else>--</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="120">
         <template #default="{ row }">
           <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
-          <el-button type="danger" link @click="handleSingleDelete(row)">删除</el-button>
+          <el-button type="danger" link @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -410,12 +396,17 @@ const handleEndChange = (value) => {
           />
         </el-form-item>
         <el-form-item label="车次编号" prop="trainCode">
-          <TrainSelect v-model="dailyTrainTicketForm.trainCode"/>
+          <el-input
+            v-model="dailyTrainTicketForm.trainCode"
+            placeholder="请输入车次编号"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="出发站" prop="start">
-          <StationSelect
+          <el-input
             v-model="dailyTrainTicketForm.start"
-            @update:modelValue="handleStartChange"
+            placeholder="请输入出发站"
+            clearable
           />
         </el-form-item>
         <el-form-item label="出发站拼音" prop="startPinyin">
@@ -433,12 +424,17 @@ const handleEndChange = (value) => {
           />
         </el-form-item>
         <el-form-item label="出发站序" prop="startIndex">
-          <el-input-number v-model="dailyTrainTicketForm.startIndex" />
+          <el-input
+            v-model="dailyTrainTicketForm.startIndex"
+            placeholder="请输入出发站序"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="到达站" prop="end">
-          <StationSelect
+          <el-input
             v-model="dailyTrainTicketForm.end"
-            @update:modelValue="handleEndChange"
+            placeholder="请输入到达站"
+            clearable
           />
         </el-form-item>
         <el-form-item label="到达站拼音" prop="endPinyin">
@@ -456,10 +452,18 @@ const handleEndChange = (value) => {
           />
         </el-form-item>
         <el-form-item label="到站站序" prop="endIndex">
-          <el-input-number v-model="dailyTrainTicketForm.endIndex" />
+          <el-input
+            v-model="dailyTrainTicketForm.endIndex"
+            placeholder="请输入到站站序"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="一等座余票" prop="ydz">
-          <el-input-number v-model="dailyTrainTicketForm.ydz" />
+          <el-input
+            v-model="dailyTrainTicketForm.ydz"
+            placeholder="请输入一等座余票"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="一等座票价" prop="ydzPrice">
           <el-input
@@ -469,7 +473,11 @@ const handleEndChange = (value) => {
           />
         </el-form-item>
         <el-form-item label="二等座余票" prop="edz">
-          <el-input-number v-model="dailyTrainTicketForm.edz" />
+          <el-input
+            v-model="dailyTrainTicketForm.edz"
+            placeholder="请输入二等座余票"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="二等座票价" prop="edzPrice">
           <el-input
@@ -479,7 +487,11 @@ const handleEndChange = (value) => {
           />
         </el-form-item>
         <el-form-item label="软卧余票" prop="rw">
-          <el-input-number v-model="dailyTrainTicketForm.rw" />
+          <el-input
+            v-model="dailyTrainTicketForm.rw"
+            placeholder="请输入软卧余票"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="软卧票价" prop="rwPrice">
           <el-input
@@ -489,7 +501,11 @@ const handleEndChange = (value) => {
           />
         </el-form-item>
         <el-form-item label="硬卧余票" prop="yw">
-          <el-input-number v-model="dailyTrainTicketForm.yw" />
+          <el-input
+            v-model="dailyTrainTicketForm.yw"
+            placeholder="请输入硬卧余票"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="硬卧票价" prop="ywPrice">
           <el-input
@@ -561,6 +577,35 @@ const handleEndChange = (value) => {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.two-line {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+}
+
+.two-line > div {
+  width: 100%;
+}
+
+/* 辅助描述文字样式 */
+.two-line > div::before {
+  content: attr(data-label);
+  font-size: 12px;
+  color: #909399;
+  margin-right: 4px;
+}
+
+.unavailable {
+  color: #999;
+  height: 48px;
+  line-height: 48px;
+}
+
+/* 让表格行高适应两行内容 */
+:deep(.el-table__row) {
+  height: 60px;
 }
 
 .pagination-container {
