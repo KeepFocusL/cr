@@ -150,14 +150,18 @@ public class DailyTrainTicketService {
                 // 计算票价 = 里程(公里) * 座位单价(元/公里) * 火车类型(系数)
                 BigDecimal ydzPrice = kmSum.multiply(priceRate).multiply(ydzPriceBySeatType).setScale(2, RoundingMode.HALF_UP);
 
+                BigDecimal edzPrice = kmSum.multiply(priceRate).multiply(SeatType.EDZ.getPrice()).setScale(2, RoundingMode.HALF_UP);
+                BigDecimal rwPrice = kmSum.multiply(priceRate).multiply(SeatType.RW.getPrice()).setScale(2, RoundingMode.HALF_UP);
+                BigDecimal ywPrice = kmSum.multiply(priceRate).multiply(SeatType.YW.getPrice()).setScale(2, RoundingMode.HALF_UP);
+
                 dailyTrainTicket.setYdz(ydzCount);
                 dailyTrainTicket.setYdzPrice(ydzPrice);
                 dailyTrainTicket.setEdz(edzCount);
-                dailyTrainTicket.setEdzPrice(BigDecimal.ZERO);
+                dailyTrainTicket.setEdzPrice(edzPrice);
                 dailyTrainTicket.setRw(rwCount);
-                dailyTrainTicket.setRwPrice(BigDecimal.ZERO);
+                dailyTrainTicket.setRwPrice(rwPrice);
                 dailyTrainTicket.setYw(ywCount);
-                dailyTrainTicket.setYwPrice(BigDecimal.ZERO);
+                dailyTrainTicket.setYwPrice(ywPrice);
 
                 dailyTrainTicket.setCreatedAt(DateTime.now());
                 dailyTrainTicket.setUpdatedAt(null);
