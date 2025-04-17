@@ -157,6 +157,6 @@ public class DailyTrainService {
         // 生成指定日期的【余票信息】
         System.out.println("正在生成日期 = " + DateUtil.formatDate(date) + "，车次编号 = " + train.getCode() + " 的【余票信息】数据");
 
-        dailyTrainTicketService.genDaily(date, train.getCode());
+        dailyTrainTicketService.genDaily(date, train);
     }
 }
