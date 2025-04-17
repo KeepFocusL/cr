@@ -3,6 +3,7 @@ package com.example.cr.business.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import com.example.cr.business.entity.TrainStation;
+import com.example.cr.business.enums.SeatType;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.business.entity.DailyTrainTicket;
 import com.example.cr.business.entity.DailyTrainTicketExample;
@@ -32,6 +33,9 @@ public class DailyTrainTicketService {
 
     @Autowired
     TrainStationService trainStationService;
+
+    @Autowired
+    DailyTrainSeatService dailyTrainSeatService;
 
     public PageResponse<DailyTrainTicketResponse> list(DailyTrainTicketListRequest request) {
         DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();
@@ -127,7 +131,9 @@ public class DailyTrainTicketService {
                 dailyTrainTicket.setEndTime(trainStationEnd.getInTime());
                 dailyTrainTicket.setEndIndex(trainStationEnd.getIndex());
 
-                dailyTrainTicket.setYdz(0);
+                int ydzCount = dailyTrainSeatService.countSeat(date, trainCode, SeatType.YDZ.getCode());
+
+                dailyTrainTicket.setYdz(ydzCount);
                 dailyTrainTicket.setYdzPrice(BigDecimal.ZERO);
                 dailyTrainTicket.setEdz(0);
                 dailyTrainTicket.setEdzPrice(BigDecimal.ZERO);
