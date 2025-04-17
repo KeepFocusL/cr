@@ -123,7 +123,8 @@ public class DailyTrainTicketService {
 
                 dailyTrainTicket.setEnd(trainStationEnd.getName());
                 dailyTrainTicket.setEndPinyin(trainStationEnd.getNamePinyin());
-                dailyTrainTicket.setEndTime(trainStationEnd.getOutTime());
+                // 车票的终点站的到达时间就是终点站车站表中记录的进站时间
+                dailyTrainTicket.setEndTime(trainStationEnd.getInTime());
                 dailyTrainTicket.setEndIndex(trainStationEnd.getIndex());
 
                 dailyTrainTicket.setYdz(0);
