@@ -79,6 +79,40 @@ const handleReset = () => {
   searchForm.keyword = ''
   handleSearch()
 }
+
+
+// 计算行程时间
+const calculateDuration = (startTime, endTime) => {
+  const getMinutes = (time) => {
+    const [hours, minutes, seconds] = time.split(':').map(Number)
+    return hours * 3600 + minutes * 60 + seconds
+  }
+
+  let startMinutes = getMinutes(startTime)
+  let endMinutes = getMinutes(endTime)
+
+  // 如果结束时间小于开始时间，说明是跨天，需要加24小时
+  if (endMinutes < startMinutes) {
+    endMinutes += 24 * 3600
+  }
+
+  // 计算时间差
+  const diffSeconds = endMinutes - startMinutes
+  const hours = Math.floor(diffSeconds / 3600)
+  const minutes = Math.floor((diffSeconds % 3600) / 60)
+  const seconds = diffSeconds % 60
+
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+}
+
+// 判断是否跨天
+const isNextDay = (startTime, endTime) => {
+  const getMinutes = (time) => {
+    const [hours, minutes, seconds] = time.split(':').map(Number)
+    return hours * 3600 + minutes * 60 + seconds
+  }
+  return getMinutes(endTime) < getMinutes(startTime)
+}
 </script>
 
 <template>
@@ -107,32 +141,81 @@ const handleReset = () => {
 
     <!-- 余票信息列表 -->
     <el-table
-
+      ref="tableRef"
       :data="dailyTrainTicketList"
       v-loading="tableLoading"
       :table-layout="'auto'"
       style="width: 100%"
       border
     >
+      <el-table-column prop="date" label="日期" width="120"/>
+      <el-table-column prop="trainCode" label="车次编号" width="100"/>
+      <el-table-column label="车站" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line">
+            <div data-label="出发站：">{{ row.start }}</div>
+            <div data-label="到达站：">{{ row.end }}</div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="时间" min-width="150">
+        <template #default="{ row }">
+          <div class="two-line">
+            <div data-label="出发时间：">{{ row.startTime }}</div>
+            <div data-label="到达时间：">{{ row.endTime }}</div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="历时" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line">
+            <div data-label="总时长：">{{ calculateDuration(row.startTime, row.endTime) }}</div>
+            <div data-label="到达日：">{{
+                isNextDay(row.startTime, row.endTime) ? '次日到达' : '当日到达'
+              }}
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="一等座" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line" v-if="row.ydz !== -1">
+            <div data-label="余票：">{{ row.ydz }}</div>
+            <div data-label="票价：">{{ row.ydzPrice }}¥</div>
+          </div>
+          <div class="unavailable" v-else>--</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="二等座" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line" v-if="row.edz !== -1">
+            <div data-label="余票：">{{ row.edz }}</div>
+            <div data-label="票价：">{{ row.edzPrice }}¥</div>
+          </div>
+          <div class="unavailable" v-else>--</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="软卧" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line" v-if="row.rw !== -1">
+            <div data-label="余票：">{{ row.rw }}</div>
+            <div data-label="票价：">{{ row.rwPrice }}¥</div>
+          </div>
+          <div class="unavailable" v-else>--</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="硬卧" min-width="120">
+        <template #default="{ row }">
+          <div class="two-line" v-if="row.yw !== -1">
+            <div data-label="余票：">{{ row.yw }}</div>
+            <div data-label="票价：">{{ row.ywPrice }}¥</div>
+          </div>
+          <div class="unavailable" v-else>--</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="120">
 
-      <el-table-column prop="date" label="日期"/>
-      <el-table-column prop="trainCode" label="车次编号"/>
-      <el-table-column prop="start" label="出发站"/>
-      <el-table-column prop="startPinyin" label="出发站拼音"/>
-      <el-table-column prop="startTime" label="出发时间"/>
-      <el-table-column prop="startIndex" label="出发站序"/>
-      <el-table-column prop="end" label="到达站"/>
-      <el-table-column prop="endPinyin" label="到达站拼音"/>
-      <el-table-column prop="endTime" label="到站时间"/>
-      <el-table-column prop="endIndex" label="到站站序"/>
-      <el-table-column prop="ydz" label="一等座余票"/>
-      <el-table-column prop="ydzPrice" label="一等座票价"/>
-      <el-table-column prop="edz" label="二等座余票"/>
-      <el-table-column prop="edzPrice" label="二等座票价"/>
-      <el-table-column prop="rw" label="软卧余票"/>
-      <el-table-column prop="rwPrice" label="软卧票价"/>
-      <el-table-column prop="yw" label="硬卧余票"/>
-      <el-table-column prop="ywPrice" label="硬卧票价"/>
+      </el-table-column>
     </el-table>
 
     <!-- 分页组件 -->
@@ -203,6 +286,35 @@ const handleReset = () => {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+.two-line {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+}
+
+.two-line > div {
+  width: 100%;
+}
+
+/* 辅助描述文字样式 */
+.two-line > div::before {
+  content: attr(data-label);
+  font-size: 12px;
+  color: #909399;
+  margin-right: 4px;
+}
+
+.unavailable {
+  color: #999;
+  height: 48px;
+  line-height: 48px;
+}
+
+/* 让表格行高适应两行内容 */
+:deep(.el-table__row) {
+  height: 60px;
 }
 
 .pagination-container {
