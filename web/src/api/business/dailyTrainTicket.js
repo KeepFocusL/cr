@@ -20,10 +20,3 @@ export function listDailyTrainTicket(params = {}) {
   })
 }
 
-export function saveDailyTrainTicket(data) {
-  return http.post(MODULE_PREFIX + '/daily-train-ticket/save', data)
-}
-
-export function deleteDailyTrainTicket(ids) {
-  return http.delete(MODULE_PREFIX + '/daily-train-ticket/delete', { data: ids })
-}
