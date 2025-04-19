@@ -130,7 +130,8 @@ import {
   SwitchButton,
   Fold,
   Expand,
-  ArrowDown
+  ArrowDown,
+  Ticket
 } from '@element-plus/icons-vue'
 import {useUserStore} from '@/stores/user.js'
 
@@ -172,6 +173,11 @@ const menuConfig = [
     path: '/dashboard',
     title: '仪表盘',
     icon: Monitor
+  },
+  {
+    path: '/daily-train-ticket',
+    title: '余票信息',
+    icon: Ticket
   },
   {
     title: '多级菜单',

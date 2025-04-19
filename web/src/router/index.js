@@ -30,6 +30,12 @@ const router = createRouter({
           name: 'Empty',
           component: () => import('../views/Empty.vue'),
           meta: { title: '空白页面' }
+        },
+        {
+          path: 'daily-train-ticket',
+          name: 'dailyTrainTicket',
+          component: () => import('../views/business/dailyTrainTicket.vue'),
+          meta: { title: '余票信息' }
         }
       ]
     },
