@@ -11,7 +11,7 @@ const MODULE_PREFIX = '/b'
  */
 export function listDailyTrainTicket(params = {}) {
   const { page = 1, size = 20, keyword } = params
-  return http.get(MODULE_PREFIX + '/daily-train-ticket/list', {
+  return http.get(MODULE_PREFIX + '/ticket/list', {
     params: {
       page,
       size,

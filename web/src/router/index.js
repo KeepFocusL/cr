@@ -32,9 +32,9 @@ const router = createRouter({
           meta: { title: '空白页面' }
         },
         {
-          path: 'daily-train-ticket',
-          name: 'dailyTrainTicket',
-          component: () => import('../views/business/dailyTrainTicket.vue'),
+          path: 'ticket',
+          name: 'Ticket',
+          component: () => import('../views/business/Ticket.vue'),
           meta: { title: '余票信息' }
         }
       ]

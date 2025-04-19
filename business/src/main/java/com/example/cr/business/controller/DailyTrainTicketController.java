@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("daily-train-ticket")
+@RequestMapping("ticket")
 public class DailyTrainTicketController {
     @Autowired
     DailyTrainTicketService dailyTrainTicketService;

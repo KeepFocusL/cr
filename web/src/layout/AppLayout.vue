@@ -175,7 +175,7 @@ const menuConfig = [
     icon: Monitor
   },
   {
-    path: '/daily-train-ticket',
+    path: '/ticket',
     title: '余票信息',
     icon: Ticket
   },

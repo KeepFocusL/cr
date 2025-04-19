@@ -2,7 +2,7 @@
 import {ref, reactive, onMounted} from 'vue'
 import {Refresh} from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
-import {listDailyTrainTicket} from '@/api/business/dailyTrainTicket.js'
+import {listDailyTrainTicket} from '@/api/business/ticket.js'
 
 // 余票信息列表数据
 const dailyTrainTicketList = ref([])
@@ -92,9 +92,9 @@ const handleReset = () => {
         <el-form :inline="true" :model="searchForm" @submit.prevent>
           <el-form-item class="mb0">
             <el-input
-                    v-model="searchForm.keyword"
-                    placeholder="请输入关键词"
-                    clearable
+              v-model="searchForm.keyword"
+              placeholder="请输入关键词"
+              clearable
             />
           </el-form-item>
           <el-form-item class="mb0">
@@ -107,14 +107,14 @@ const handleReset = () => {
 
     <!-- 余票信息列表 -->
     <el-table
-      
+
       :data="dailyTrainTicketList"
       v-loading="tableLoading"
       :table-layout="'auto'"
       style="width: 100%"
       border
     >
-      
+
       <el-table-column prop="date" label="日期"/>
       <el-table-column prop="trainCode" label="车次编号"/>
       <el-table-column prop="start" label="出发站"/>
