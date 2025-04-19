@@ -113,6 +113,10 @@ const isNextDay = (startTime, endTime) => {
   }
   return getMinutes(endTime) < getMinutes(startTime)
 }
+
+const handleBook = (row) => {
+  ElMessage.success('预定从 ' + row.start + ' 到 ' + row.end + ' 成功')
+}
 </script>
 
 <template>
@@ -214,7 +218,15 @@ const isNextDay = (startTime, endTime) => {
         </template>
       </el-table-column>
       <el-table-column label="操作" width="120">
-
+        <template #default="{ row }">
+          <el-button
+            type="primary"
+            size="small"
+            @click="handleBook(row)"
+          >
+            预订
+          </el-button>
+        </template>
       </el-table-column>
     </el-table>
 
