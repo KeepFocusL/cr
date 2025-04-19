@@ -3,6 +3,9 @@ import {ref, reactive, onMounted} from 'vue'
 import {Refresh} from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
 import {listDailyTrainTicket} from '@/api/business/ticket.js'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // 余票信息列表数据
 const dailyTrainTicketList = ref([])
@@ -115,7 +118,25 @@ const isNextDay = (startTime, endTime) => {
 }
 
 const handleBook = (row) => {
-  ElMessage.success('预定从 ' + row.start + ' 到 ' + row.end + ' 成功')
+  router.push({
+    path: '/confirm',
+    query: {
+      date: row.date,
+      trainCode: row.trainCode,
+      start: row.start,
+      end: row.end,
+      startTime: row.startTime,
+      endTime: row.endTime,
+      ydz: row.ydz,
+      ydzPrice: row.ydzPrice,
+      edz: row.edz,
+      edzPrice: row.edzPrice,
+      rw: row.rw,
+      rwPrice: row.rwPrice,
+      yw: row.yw,
+      ywPrice: row.ywPrice
+    }
+  })
 }
 </script>
 
