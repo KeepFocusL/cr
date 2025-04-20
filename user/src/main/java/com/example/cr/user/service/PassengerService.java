@@ -1,6 +1,7 @@
 package com.example.cr.user.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.example.cr.common.context.UserContext;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.user.entity.Passenger;
 import com.example.cr.user.entity.PassengerExample;
@@ -61,6 +62,7 @@ public class PassengerService {
             passenger.setId(SnowflakeUtil.getId());
             passenger.setCreatedAt(now);
             passenger.setUpdatedAt(now);
+            passenger.setUserId(UserContext.getId());
             passengerMapper.insert(passenger);
         } else {
             passenger.setUpdatedAt(now);
