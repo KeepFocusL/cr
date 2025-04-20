@@ -32,6 +32,7 @@ public class PassengerService {
 
         // 处理搜索条件
         PassengerExample.Criteria criteria = passengerExample.createCriteria();
+        criteria.andUserIdEqualTo(UserContext.getId());
         if (request.getKeyword() != null && !request.getKeyword().isEmpty()) {
             String keyword = "%" + request.getKeyword() + "%";
             criteria.andNameLike(keyword);
