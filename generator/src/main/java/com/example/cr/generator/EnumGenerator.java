@@ -1,6 +1,7 @@
 package com.example.cr.generator;
 
 import cn.hutool.core.util.StrUtil;
+import com.example.cr.generator.enums.PassengerType;
 import com.example.cr.generator.enums.SeatCol;
 import com.example.cr.generator.enums.SeatType;
 import com.example.cr.generator.enums.TrainType;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnumGenerator {
-    static String frontendType = "web-admin";
+    static String frontendType = "web";
     static String basePath = frontendType + "/src/assets/js/";
     static String enumsJsPath = basePath + "enums.js";
 
@@ -33,6 +34,7 @@ public class EnumGenerator {
             toJson(TrainType.class, bufferArray);
             toJson(SeatType.class, bufferArray);
             toJson(SeatCol.class, bufferArray);
+            toJson(PassengerType.class, bufferArray);
             writeJs(bufferArray);
         } catch (Exception e) {
             e.printStackTrace();
