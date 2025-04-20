@@ -15,7 +15,7 @@ public class CodeGenerator {
     static String basePath = "[module]/src/main/java/com/example/cr/[module]/";
     static String pomPath ="generator/pom.xml";
 
-    static String frontendType = "web-admin";
+    static String frontendType = "web";
 
     static String vuePath = frontendType + "/src/views/[module]/";
     static boolean readOnly = false;
