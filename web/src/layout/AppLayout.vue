@@ -180,6 +180,11 @@ const menuConfig = [
     icon: Ticket
   },
   {
+    path: '/passenger',
+    title: '我的乘车人',
+    icon: Ticket
+  },
+  {
     title: '多级菜单',
     icon: Files,
     children: [

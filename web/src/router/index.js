@@ -42,6 +42,12 @@ const router = createRouter({
           name: 'Confirm',
           component: () => import('../views/business/Confirm.vue'),
           meta: { title: '确认订单' }
+        },
+        {
+          path: 'passenger',
+          name: 'Passenger',
+          component: () => import('../views/user/Passenger.vue'),
+          meta: { title: '我的乘车人' }
         }
       ]
     },
