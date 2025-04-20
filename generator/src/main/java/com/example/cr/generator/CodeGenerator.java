@@ -108,7 +108,7 @@ public class CodeGenerator {
         String targetPath = basePath + packageName + "/";
         new File(targetPath).mkdirs();
         if ("controller".equals(target)) {
-            Target = "Admin" + Target.substring(0, 1).toUpperCase() + target.substring(1);
+            Target = (packageName.endsWith("/admin") ? "Admin" : "") + Target.substring(0, 1).toUpperCase() + target.substring(1);
         }
         String typeClass = targetPath + Domain + Target + ".java";
         CustomFreemarkerUtil.generate(typeClass, data);
