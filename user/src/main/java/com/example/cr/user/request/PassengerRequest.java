@@ -50,14 +50,12 @@ public class PassengerRequest {
      * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @NotNull(message = "【创建时间】不能为空")
     private Date createdAt;
 
     /**
      * 更新时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    @NotNull(message = "【更新时间】不能为空")
     private Date updatedAt;
 
 
