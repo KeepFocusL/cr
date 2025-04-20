@@ -131,7 +131,7 @@ import {
   Fold,
   Expand,
   ArrowDown,
-  Ticket
+  Ticket, Avatar
 } from '@element-plus/icons-vue'
 import {useUserStore} from '@/stores/user.js'
 
@@ -182,7 +182,7 @@ const menuConfig = [
   {
     path: '/passenger',
     title: '我的乘车人',
-    icon: Ticket
+    icon: Avatar
   },
   {
     title: '多级菜单',
