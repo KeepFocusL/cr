@@ -46,13 +46,13 @@ drop table if exists `passenger`;
 create table `passenger`
 (
     `id`          bigint      not null comment 'id',
-    `user_id`     bigint      not null comment '会员id',
+    `user_id`     bigint      null comment '会员id',
     `name`        varchar(20) not null comment '姓名|searchable',
     `id_card`     varchar(18) not null comment '身份证号',
     `mobile`      varchar(11) comment '手机号',
     `type`        char(1)     not null comment '乘客类型|枚举[PassengerType]',
-    `created_at` datetime(3) not null comment '创建时间',
-    `updated_at` datetime(3) not null comment '更新时间',
+    `created_at` datetime(3) null comment '创建时间',
+    `updated_at` datetime(3) null comment '更新时间',
     primary key (`id`),
     key `index_user_id` (`user_id`)
 ) default charset = utf8mb4 comment ='乘车人';
