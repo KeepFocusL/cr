@@ -1,14 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ArrowRight } from '@element-plus/icons-vue'
 import { useTicketStore } from '@/stores/ticket'
-import router from "@/router/index.js";
+import { listPassenger } from '@/api/user/passenger.js'
 
+const router = useRouter()
 const ticketStore = useTicketStore()
-
-const route = useRoute()
 const ticketInfo = ref({})
 const selectedSeat = ref('')
 const loading = ref(false)
@@ -20,6 +19,14 @@ const seatOptions = [
   { label: '软卧', value: 'rw', price: 0, count: 0 },
   { label: '硬卧', value: 'yw', price: 0, count: 0 }
 ]
+
+// 乘客相关数据
+const passengerList = ref([])
+const selectedPassengers = ref([])
+const passengerLoading = ref(false)
+
+// 定义常量
+const MAX_PASSENGER_COUNT = 2  // 最大乘客选择数量
 
 onMounted(() => {
   // 从 store 获取车票信息
@@ -40,11 +47,38 @@ onMounted(() => {
   seatOptions[2].count = ticketInfo.value.rw
   seatOptions[3].price = ticketInfo.value.ywPrice
   seatOptions[3].count = ticketInfo.value.yw
+
+  getPassengerList()
 })
+
+// 获取乘客列表
+const getPassengerList = async () => {
+  passengerLoading.value = true
+  try {
+    const res = await listPassenger({
+      page: 1,
+      size: 20
+    })
+    if (res.code === 200) {
+      passengerList.value = res.data.list
+    } else {
+      ElMessage.error(res.msg || '获取乘客列表失败')
+    }
+  } catch (error) {
+    console.error('获取乘客列表失败:', error)
+    ElMessage.error('获取乘客列表失败')
+  } finally {
+    passengerLoading.value = false
+  }
+}
 
 const handleSubmit = () => {
   if (!selectedSeat.value) {
     ElMessage.warning('请选择座位类型')
+    return
+  }
+  if (selectedPassengers.value.length === 0) {
+    ElMessage.warning('请选择乘车人')
     return
   }
   loading.value = true
@@ -90,6 +124,21 @@ const isNextDay = (startTime, endTime) => {
     return hours * 60 + minutes
   }
   return getMinutes(endTime) < getMinutes(startTime)
+}
+
+// 获取乘客类型显示文本
+const getPassengerTypeText = (type) => {
+  const found = window.PASSENGER_TYPE_ARRAY.find(item => item.code === type.toString())
+  return found ? found.desc : '未知'
+}
+
+// 监听乘客选择变化
+const handlePassengerChange = (values) => {
+  if (values.length > MAX_PASSENGER_COUNT) {
+    ElMessage.warning(`每次最多选择${MAX_PASSENGER_COUNT}位乘车人`)
+    // 只保留前N个选择的乘客
+    selectedPassengers.value = values.slice(0, MAX_PASSENGER_COUNT)
+  }
 }
 </script>
 
@@ -150,14 +199,39 @@ const isNextDay = (startTime, endTime) => {
 
       <!-- 乘客信息 -->
       <div class="passenger-info">
-        <h3>乘客信息</h3>
-        <el-alert
-          title="请先选择乘车人"
-          type="info"
-          :closable="false"
-          show-icon
-        />
-        <!-- TODO: 添加乘客选择组件 -->
+        <h3>选择乘车人</h3>
+        <div v-loading="passengerLoading">
+          <el-checkbox-group
+            v-model="selectedPassengers"
+            class="passenger-list"
+            @change="handlePassengerChange"
+          >
+            <el-checkbox
+              v-for="passenger in passengerList"
+              :key="passenger.id"
+              :value="passenger.id"
+              class="passenger-item"
+            >
+              <div class="passenger-detail">
+                <div class="name">{{ passenger.name }}</div>
+                <div class="id-card">{{ passenger.idCard }}</div>
+                <div class="passenger-type">
+                  {{ getPassengerTypeText(passenger.type) }}
+                </div>
+                <div v-if="selectedSeat" class="seat-type">
+                  {{ seatOptions.find(o => o.value === selectedSeat)?.label }}
+                </div>
+              </div>
+            </el-checkbox>
+          </el-checkbox-group>
+
+          <div v-if="passengerList.length === 0" class="no-data">
+            <el-empty description="暂无乘车人信息" />
+            <el-button type="primary" @click="router.push('/passenger')">
+              去添加乘车人
+            </el-button>
+          </div>
+        </div>
       </div>
 
       <!-- 提交按钮 -->
@@ -348,5 +422,62 @@ const isNextDay = (startTime, endTime) => {
   font-size: 14px;
   color: #909399;
   white-space: nowrap;
+}
+
+.passenger-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.passenger-item {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.passenger-item:hover {
+  border-color: #409EFF;
+}
+
+.passenger-item.is-checked {
+  border-color: #409EFF;
+  background-color: #ecf5ff;
+}
+
+.passenger-detail {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: 8px;
+}
+
+.name {
+  font-weight: bold;
+  min-width: 60px;
+}
+
+.id-card {
+  color: #606266;
+  min-width: 160px;
+}
+
+.passenger-type {
+  color: #606266;
+  background-color: #f4f4f5;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+}
+
+.no-data .el-button {
+  margin-top: 16px;
 }
 </style>
