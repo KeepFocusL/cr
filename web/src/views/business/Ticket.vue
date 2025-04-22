@@ -4,6 +4,9 @@ import {Refresh} from '@element-plus/icons-vue'
 import {ElMessage} from 'element-plus'
 import {listDailyTrainTicket} from '@/api/business/ticket.js'
 import { useRouter } from 'vue-router'
+import { useTicketStore } from '@/stores/ticket'
+
+const ticketStore = useTicketStore()
 
 const router = useRouter()
 
@@ -118,25 +121,25 @@ const isNextDay = (startTime, endTime) => {
 }
 
 const handleBook = (row) => {
-  router.push({
-    path: '/confirm',
-    query: {
-      date: row.date,
-      trainCode: row.trainCode,
-      start: row.start,
-      end: row.end,
-      startTime: row.startTime,
-      endTime: row.endTime,
-      ydz: row.ydz,
-      ydzPrice: row.ydzPrice,
-      edz: row.edz,
-      edzPrice: row.edzPrice,
-      rw: row.rw,
-      rwPrice: row.rwPrice,
-      yw: row.yw,
-      ywPrice: row.ywPrice
-    }
+  // 存储车票信息到 store
+  ticketStore.setTicketInfo({
+    date: row.date,
+    trainCode: row.trainCode,
+    start: row.start,
+    end: row.end,
+    startTime: row.startTime,
+    endTime: row.endTime,
+    ydz: row.ydz,
+    ydzPrice: row.ydzPrice,
+    edz: row.edz,
+    edzPrice: row.edzPrice,
+    rw: row.rw,
+    rwPrice: row.rwPrice,
+    yw: row.yw,
+    ywPrice: row.ywPrice
   })
+  // 跳转到确认页面
+  router.push('/confirm')
 }
 </script>
 

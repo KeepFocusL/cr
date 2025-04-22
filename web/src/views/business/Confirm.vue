@@ -3,6 +3,10 @@ import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { ArrowRight } from '@element-plus/icons-vue'
+import { useTicketStore } from '@/stores/ticket'
+import router from "@/router/index.js";
+
+const ticketStore = useTicketStore()
 
 const route = useRoute()
 const ticketInfo = ref({})
@@ -18,23 +22,14 @@ const seatOptions = [
 ]
 
 onMounted(() => {
-  // 获取路由传递的参数
-  ticketInfo.value = {
-    date: route.query.date,
-    trainCode: route.query.trainCode,
-    start: route.query.start,
-    end: route.query.end,
-    startTime: route.query.startTime,
-    endTime: route.query.endTime,
-    ydz: route.query.ydz,
-    ydzPrice: route.query.ydzPrice,
-    edz: route.query.edz,
-    edzPrice: route.query.edzPrice,
-    rw: route.query.rw,
-    rwPrice: route.query.rwPrice,
-    yw: route.query.yw,
-    ywPrice: route.query.ywPrice
+  // 从 store 获取车票信息
+  if (!ticketStore.ticketInfo) {
+    ElMessage.error('车票信息不存在')
+    router.push('/ticket')
+    return
   }
+
+  ticketInfo.value = ticketStore.ticketInfo
 
   // 更新座位选项的价格和余票，并过滤掉余票为-1的选项
   seatOptions[0].price = ticketInfo.value.ydzPrice
@@ -57,6 +52,8 @@ const handleSubmit = () => {
   setTimeout(() => {
     loading.value = false
     ElMessage.success('订单提交成功！')
+    // 清除store中的数据
+    ticketStore.clearTicketInfo()
   }, 1000)
 }
 
