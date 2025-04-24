@@ -1,6 +1,7 @@
 package com.example.cr.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.example.cr.common.context.UserContext;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.business.entity.ConfirmOrder;
 import com.example.cr.business.entity.ConfirmOrderExample;
@@ -67,6 +68,7 @@ public class ConfirmOrderService {
             confirmOrder.setId(SnowflakeUtil.getId());
             confirmOrder.setCreatedAt(now);
             confirmOrder.setUpdatedAt(now);
+            confirmOrder.setUserId(UserContext.getId());
             confirmOrderMapper.insert(confirmOrder);
         } else {
             confirmOrder.setUpdatedAt(now);
