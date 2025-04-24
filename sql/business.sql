@@ -185,4 +185,24 @@ create table `daily_train_ticket`
     `updated_at`  datetime(3) comment '修改时间',
     primary key (`id`),
     unique key `date_train_code_start_end_unique` (`date`, `train_code`, `start`, `end`)
-) comment ='余票信息'
+) comment ='余票信息';
+
+
+-- 确认订单
+drop table if exists `confirm_order`;
+create table `confirm_order`
+(
+    `id`                    bigint      not null comment 'id',
+    `user_id`             bigint      not null comment '会员id',
+    `date`                  date        not null comment '日期',
+    `train_code`            varchar(20) not null comment '车次编号|searchable',
+    `start`                 varchar(20) not null comment '出发站|searchable',
+    `end`                   varchar(20) not null comment '到达站|searchable',
+    `daily_train_ticket_id` bigint      not null comment '余票ID',
+    `tickets`               json        not null comment '车票',
+    `status`                char(1)     not null comment '订单状态|枚举[ConfirmOrderStatus]',
+    `created_at`           datetime(3) comment '新增时间',
+    `updated_at`           datetime(3) comment '修改时间',
+    primary key (`id`),
+    index `date_train_code_index` (`date`, `train_code`)
+) comment ='确认订单';
