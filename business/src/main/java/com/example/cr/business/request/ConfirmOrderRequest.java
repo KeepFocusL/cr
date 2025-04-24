@@ -1,11 +1,10 @@
 package com.example.cr.business.request;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 public class ConfirmOrderRequest {
     /**
@@ -55,8 +54,8 @@ public class ConfirmOrderRequest {
     /**
      * 车票
      */
-    @NotBlank(message = "【车票】不能为空")
-    private String tickets;
+    @NotEmpty(message = "【车票】不能为空")
+    private List<ConfirmOrderTicketRequest> tickets;
 
     /**
      * 订单状态
@@ -133,11 +132,11 @@ public class ConfirmOrderRequest {
         this.dailyTrainTicketId = dailyTrainTicketId;
     }
 
-    public String getTickets() {
+    public List<ConfirmOrderTicketRequest> getTickets() {
         return tickets;
     }
 
-    public void setTickets(String tickets) {
+    public void setTickets(List<ConfirmOrderTicketRequest> tickets) {
         this.tickets = tickets;
     }
 
