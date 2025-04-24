@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EnumGenerator {
-    static String frontendType = "web";
+    static String frontendType = "web-admin";
     static String basePath = frontendType + "/src/assets/js/";
     static String enumsJsPath = basePath + "enums.js";
 
