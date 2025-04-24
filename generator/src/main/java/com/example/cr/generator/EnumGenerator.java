@@ -1,10 +1,7 @@
 package com.example.cr.generator;
 
 import cn.hutool.core.util.StrUtil;
-import com.example.cr.generator.enums.PassengerType;
-import com.example.cr.generator.enums.SeatCol;
-import com.example.cr.generator.enums.SeatType;
-import com.example.cr.generator.enums.TrainType;
+import com.example.cr.generator.enums.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,6 +32,7 @@ public class EnumGenerator {
             toJson(SeatType.class, bufferArray);
             toJson(SeatCol.class, bufferArray);
             toJson(PassengerType.class, bufferArray);
+            toJson(ConfirmOrderStatus.class, bufferArray);
             writeJs(bufferArray);
         } catch (Exception e) {
             e.printStackTrace();
