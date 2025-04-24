@@ -137,7 +137,8 @@ import {
   Box,
   Ticket,
   Calendar,
-  Timer
+  Timer,
+  Tickets
 
 } from '@element-plus/icons-vue'
 import {useUserStore} from '@/stores/user.js'
@@ -259,7 +260,7 @@ const menuConfig = [
       {
         path: '/confirm-order',
         title: '确认订单',
-        icon: Ticket
+        icon: Tickets
       },
     ]
   },
