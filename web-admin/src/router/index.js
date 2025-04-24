@@ -108,6 +108,12 @@ const router = createRouter({
           name: 'DailyTrainTicket',
           component: () => import('../views/business/DailyTrainTicket.vue'),
           meta: { title: '余票信息' }
+        },
+        {
+          path: 'confirm-order',
+          name: 'ConfirmOrder',
+          component: () => import('../views/business/ConfirmOrder.vue'),
+          meta: { title: '余票信息' }
         }
       ]
     },

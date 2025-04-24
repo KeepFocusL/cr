@@ -255,7 +255,12 @@ const menuConfig = [
         path: '/daily-train-ticket',
         title: '余票信息',
         icon: Ticket
-      }
+      },
+      {
+        path: '/confirm-order',
+        title: '确认订单',
+        icon: Ticket
+      },
     ]
   },
   {
