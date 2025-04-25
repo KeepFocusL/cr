@@ -1,12 +1,17 @@
 package com.example.cr.business.service;
+
 import java.util.Date;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.EnumUtil;
 import cn.hutool.json.JSONUtil;
 import com.example.cr.business.entity.DailyTrainTicket;
 import com.example.cr.business.enums.ConfirmOrderStatus;
+import com.example.cr.business.enums.SeatType;
 import com.example.cr.business.mapper.DailyTrainMapper;
+import com.example.cr.business.request.ConfirmOrderTicketRequest;
 import com.example.cr.common.context.UserContext;
+import com.example.cr.common.exception.CommonBusinessException;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.business.entity.ConfirmOrder;
 import com.example.cr.business.entity.ConfirmOrderExample;
@@ -27,6 +32,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.example.cr.common.util.SnowflakeUtil;
 import com.example.cr.business.request.ConfirmOrderRequest;
+import org.yaml.snakeyaml.util.EnumUtils;
 
 @Service
 public class ConfirmOrderService {
@@ -122,8 +128,9 @@ public class ConfirmOrderService {
         // 查询【余票信息】获取真实的库存
         DailyTrainTicket dailyTrainTicket = dailyTrainTicketService.selectByUnique(date, trainCode, start, end);
         log.info("查到余票信息 = {}", dailyTrainTicket);
-        // 预扣减余票数量，并判断余票是否足够
 
+        // 预扣减余票数量，并判断余票是否足够
+        preReduceTicketCount(request, dailyTrainTicket);
         // 选座
         // 遍历车厢，获取每个车厢的座位数据
         // 选座：挑选符合条件的座位，如果这个车厢不满足，则进入下个车厢（隐藏条件：多个选座必须在同一个车厢）
@@ -133,5 +140,44 @@ public class ConfirmOrderService {
         // 真实扣减库存，更新【余票信息】的余票
         // 记录会员的购票记录
         // 更新【确认订单】表的订单状态=成功
+    }
+
+    private void preReduceTicketCount(@Valid ConfirmOrderRequest request, DailyTrainTicket dailyTrainTicket) {
+        // 从用户请求中获取用户要购买的票数
+        List<ConfirmOrderTicketRequest> tickets = request.getTickets();
+        for (ConfirmOrderTicketRequest ticketRequest : tickets) {
+            String seatTypeCode = ticketRequest.getSeatTypeCode();
+            SeatType seatType = EnumUtil.getBy(SeatType::getCode, seatTypeCode);
+            switch (seatType) {
+                case YDZ -> {
+                    int countAfterReduce = dailyTrainTicket.getYdz() - 1;
+                    if (countAfterReduce < 0) {
+                        throw new CommonBusinessException("余票不足");
+                    }
+                    dailyTrainTicket.setYdz(countAfterReduce);
+                }
+                case EDZ -> {
+                    int countAfterReduce = dailyTrainTicket.getEdz() - 1;
+                    if (countAfterReduce < 0) {
+                        throw new CommonBusinessException("余票不足");
+                    }
+                    dailyTrainTicket.setEdz(countAfterReduce);
+                }
+                case RW -> {
+                    int countAfterReduce = dailyTrainTicket.getRw() - 1;
+                    if (countAfterReduce < 0) {
+                        throw new CommonBusinessException("余票不足");
+                    }
+                    dailyTrainTicket.setRw(countAfterReduce);
+                }
+                case YW -> {
+                    int countAfterReduce = dailyTrainTicket.getYw() - 1;
+                    if (countAfterReduce < 0) {
+                        throw new CommonBusinessException("余票不足");
+                    }
+                    dailyTrainTicket.setYw(countAfterReduce);
+                }
+            }
+        }
     }
 }
