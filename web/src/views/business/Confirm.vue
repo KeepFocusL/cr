@@ -173,6 +173,7 @@ const handleSubmit = () => {
         passengerId: id,
         passengerName: passenger.name,
         passengerType: passenger.type,
+        passengerIdCard: passenger.idCard,
         seatType: passengerSeatTypes.value[id],
       }
     }),
@@ -200,6 +201,7 @@ const handleConfirm = () => {
 
   // 打印最终的订单信息
   console.log('最终订单信息:', {
+    dailyTrainTicketId: ticketInfo.value.id,
     date: ticketInfo.value.date,
     trainCode: ticketInfo.value.trainCode,
     start: ticketInfo.value.start,
@@ -208,7 +210,8 @@ const handleConfirm = () => {
       passengerId: passenger.passengerId,
       passengerName: passenger.passengerName,
       passengerType: passenger.passengerType,
-      seatType: passenger.seatType,
+      passengerIdCard: passenger.passengerIdCard,
+      seatTypeCode: passenger.seatType,
       seat: selectedSeats.value[index] || null
     }))
   })

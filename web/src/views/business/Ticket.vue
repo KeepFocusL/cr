@@ -123,6 +123,7 @@ const isNextDay = (startTime, endTime) => {
 const handleBook = (row) => {
   // 存储车票信息到 store
   ticketStore.setTicketInfo({
+    id: row.id,
     date: row.date,
     trainCode: row.trainCode,
     start: row.start,
