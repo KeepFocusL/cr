@@ -10,6 +10,7 @@ import com.example.cr.business.request.ConfirmOrderListRequest;
 import com.example.cr.business.response.ConfirmOrderResponse;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +82,9 @@ public class ConfirmOrderService {
         ConfirmOrderExample.Criteria criteria = confirmOrderExample.createCriteria();
         criteria.andIdIn(ids);
         return confirmOrderMapper.deleteByExample(confirmOrderExample);
+    }
+
+    public void confirm(@Valid ConfirmOrderRequest request) {
+        // todo: 待处理
     }
 }
