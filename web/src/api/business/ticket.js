@@ -20,3 +20,7 @@ export function listDailyTrainTicket(params = {}) {
   })
 }
 
+export function confirmOrder(data) {
+  return http.post(MODULE_PREFIX + '/confirm-order/confirm', data)
+}
+

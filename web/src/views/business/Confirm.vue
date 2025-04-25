@@ -5,6 +5,7 @@ import {ElMessage} from 'element-plus'
 import {ArrowRight} from '@element-plus/icons-vue'
 import {useTicketStore} from '@/stores/ticket'
 import {listPassenger} from '@/api/user/passenger.js'
+import { confirmOrder } from '@/api/business/ticket.js'
 
 const router = useRouter()
 const ticketStore = useTicketStore()
@@ -200,7 +201,7 @@ const handleConfirm = () => {
   confirmLoading.value = true
 
   // 打印最终的订单信息
-  console.log('最终订单信息:', {
+  var confirmData = {
     dailyTrainTicketId: ticketInfo.value.id,
     date: ticketInfo.value.date,
     trainCode: ticketInfo.value.trainCode,
@@ -214,9 +215,10 @@ const handleConfirm = () => {
       seatTypeCode: passenger.seatType,
       seat: selectedSeats.value[index] || null
     }))
-  })
+  };
+  console.log('最终订单信息:', confirmData)
 
-  submitOrder()
+  submitOrder(confirmData)
 }
 
 // 取消订单
@@ -235,17 +237,24 @@ const handleCancel = () => {
 }
 
 // 提交订单
-const submitOrder = () => {
+const submitOrder = async (confirmDate) => {
   loading.value = true
-  // TODO: 处理提交订单逻辑
-  setTimeout(() => {
-    loading.value = false
-    ElMessage.success('订单提交成功！')
-    confirmLoading.value = false
-    //dialogVisible.value = false
-    // 清除store中的数据
-    ticketStore.clearTicketInfo()
-  }, 1000)
+  try {
+    const res = await confirmOrder(confirmDate)
+    if (res.code === 200) {
+      loading.value = false
+      confirmLoading.value = false
+      dialogVisible.value = false
+      // 清除store中的数据
+      ticketStore.clearTicketInfo()
+      ElMessage.success('订单提交成功！')
+    } else {
+      // 场景：http 返回头的状态码是 200，但是返回体中的 code 字段值不是 200
+      ElMessage.error(res.msg || '订单提交失败')
+    }
+  } catch (error) {
+    ElMessage.error(error.response.data.msg || '订单提交失败')
+  }
 }
 
 // 计算行程时间
