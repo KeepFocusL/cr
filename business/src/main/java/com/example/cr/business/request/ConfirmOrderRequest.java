@@ -57,24 +57,6 @@ public class ConfirmOrderRequest {
     @NotEmpty(message = "【车票】不能为空")
     private List<ConfirmOrderTicketRequest> tickets;
 
-    /**
-     * 订单状态
-     */
-    @NotBlank(message = "【订单状态】不能为空")
-    private String status;
-
-    /**
-     * 新增时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date createdAt;
-
-    /**
-     * 修改时间
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
-    private Date updatedAt;
-
 
     public Long getId() {
         return id;
@@ -140,30 +122,6 @@ public class ConfirmOrderRequest {
         this.tickets = tickets;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -178,9 +136,6 @@ public class ConfirmOrderRequest {
         sb.append(", end=").append(end);
         sb.append(", dailyTrainTicketId=").append(dailyTrainTicketId);
         sb.append(", tickets=").append(tickets);
-        sb.append(", status=").append(status);
-        sb.append(", createdAt=").append(createdAt);
-        sb.append(", updatedAt=").append(updatedAt);
         sb.append("]");
         return sb.toString();
     }
