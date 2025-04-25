@@ -1,6 +1,7 @@
 package com.example.cr.business.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.EnumUtil;
 import com.example.cr.business.entity.Train;
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
+
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.example.cr.common.util.SnowflakeUtil;
@@ -76,6 +78,7 @@ public class DailyTrainTicketService {
 
         return pageResponse;
     }
+
     public void save(DailyTrainTicketRequest request) {
         DailyTrainTicket dailyTrainTicket = BeanUtil.copyProperties(request, DailyTrainTicket.class);
         DateTime now = DateTime.now();
@@ -168,6 +171,21 @@ public class DailyTrainTicketService {
 
                 dailyTrainTicketMapper.insert(dailyTrainTicket);
             }
+        }
+    }
+
+    public DailyTrainTicket selectByUnique(Date date, String trainCode, String start, String end) {
+        DailyTrainTicketExample example = new DailyTrainTicketExample();
+        example.createCriteria()
+                .andDateEqualTo(date)
+                .andTrainCodeEqualTo(trainCode)
+                .andStartEqualTo(start)
+                .andEndEqualTo(end);
+        List<DailyTrainTicket> dailyTrainTickets = dailyTrainTicketMapper.selectByExample(example);
+        if (CollUtil.isNotEmpty(dailyTrainTickets)) {
+            return dailyTrainTickets.getFirst();
+        } else {
+            return null;
         }
     }
 }

@@ -3,7 +3,9 @@ import java.util.Date;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
+import com.example.cr.business.entity.DailyTrainTicket;
 import com.example.cr.business.enums.ConfirmOrderStatus;
+import com.example.cr.business.mapper.DailyTrainMapper;
 import com.example.cr.common.context.UserContext;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.business.entity.ConfirmOrder;
@@ -31,6 +33,10 @@ public class ConfirmOrderService {
     private static final Logger log = LoggerFactory.getLogger(ConfirmOrderService.class);
     @Autowired
     ConfirmOrderMapper confirmOrderMapper;
+    @Autowired
+    private DailyTrainMapper dailyTrainMapper;
+    @Autowired
+    private DailyTrainTicketService dailyTrainTicketService;
 
     public PageResponse<ConfirmOrderResponse> list(ConfirmOrderListRequest request) {
         ConfirmOrderExample confirmOrderExample = new ConfirmOrderExample();
@@ -93,14 +99,19 @@ public class ConfirmOrderService {
     public void confirm(@Valid ConfirmOrderRequest request) {
         // 业务数据校验【暂略】如：车次、余票是否存在；车次是否有效；tickets 条数是否大于 0；同乘客同车次的票是否已经买过了
 
+        Date date = request.getDate();
+        String trainCode = request.getTrainCode();
+        String start = request.getStart();
+        String end = request.getEnd();
+
         // 保存到【确认订单】表，订单状态赋初始值
         ConfirmOrder confirmOrder = new ConfirmOrder();
         confirmOrder.setId(SnowflakeUtil.getId());
         confirmOrder.setUserId(UserContext.getId());
-        confirmOrder.setDate(request.getDate());
-        confirmOrder.setTrainCode(request.getTrainCode());
-        confirmOrder.setStart(request.getStart());
-        confirmOrder.setEnd(request.getEnd());
+        confirmOrder.setDate(date);
+        confirmOrder.setTrainCode(trainCode);
+        confirmOrder.setStart(start);
+        confirmOrder.setEnd(end);
         confirmOrder.setDailyTrainTicketId(request.getDailyTrainTicketId());
         confirmOrder.setStatus(ConfirmOrderStatus.INIT.getCode());
         confirmOrder.setCreatedAt(DateTime.now());
@@ -109,7 +120,8 @@ public class ConfirmOrderService {
 
         confirmOrderMapper.insert(confirmOrder);
         // 查询【余票信息】获取真实的库存
-
+        DailyTrainTicket dailyTrainTicket = dailyTrainTicketService.selectByUnique(date, trainCode, start, end);
+        log.info("查到余票信息 = {}", dailyTrainTicket);
         // 预扣减余票数量，并判断余票是否足够
 
         // 选座
