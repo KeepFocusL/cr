@@ -1,6 +1,9 @@
 package com.example.cr.business.service;
+import java.util.Date;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONUtil;
+import com.example.cr.business.enums.ConfirmOrderStatus;
 import com.example.cr.common.context.UserContext;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.business.entity.ConfirmOrder;
@@ -15,7 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.example.cr.common.util.SnowflakeUtil;
@@ -62,6 +67,7 @@ public class ConfirmOrderService {
 
         return pageResponse;
     }
+
     public void save(ConfirmOrderRequest request) {
         ConfirmOrder confirmOrder = BeanUtil.copyProperties(request, ConfirmOrder.class);
         DateTime now = DateTime.now();
@@ -88,7 +94,20 @@ public class ConfirmOrderService {
         // 业务数据校验【暂略】如：车次、余票是否存在；车次是否有效；tickets 条数是否大于 0；同乘客同车次的票是否已经买过了
 
         // 保存到【确认订单】表，订单状态赋初始值
+        ConfirmOrder confirmOrder = new ConfirmOrder();
+        confirmOrder.setId(SnowflakeUtil.getId());
+        confirmOrder.setUserId(UserContext.getId());
+        confirmOrder.setDate(request.getDate());
+        confirmOrder.setTrainCode(request.getTrainCode());
+        confirmOrder.setStart(request.getStart());
+        confirmOrder.setEnd(request.getEnd());
+        confirmOrder.setDailyTrainTicketId(request.getDailyTrainTicketId());
+        confirmOrder.setStatus(ConfirmOrderStatus.INIT.getCode());
+        confirmOrder.setCreatedAt(DateTime.now());
+        confirmOrder.setUpdatedAt(null);
+        confirmOrder.setTickets(JSONUtil.toJsonStr(request.getTickets()));
 
+        confirmOrderMapper.insert(confirmOrder);
         // 查询【余票信息】获取真实的库存
 
         // 预扣减余票数量，并判断余票是否足够
