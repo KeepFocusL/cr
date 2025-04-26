@@ -1,5 +1,4 @@
 package com.example.cr.business.service;
-
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -7,17 +6,14 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.example.cr.business.entity.DailyTrainTicket;
+import com.example.cr.business.entity.*;
 import com.example.cr.business.enums.ConfirmOrderStatus;
 import com.example.cr.business.enums.SeatCol;
 import com.example.cr.business.enums.SeatType;
-import com.example.cr.business.mapper.DailyTrainMapper;
 import com.example.cr.business.request.ConfirmOrderTicketRequest;
 import com.example.cr.common.context.UserContext;
 import com.example.cr.common.exception.CommonBusinessException;
 import com.example.cr.common.response.PageResponse;
-import com.example.cr.business.entity.ConfirmOrder;
-import com.example.cr.business.entity.ConfirmOrderExample;
 import com.example.cr.business.mapper.ConfirmOrderMapper;
 import com.example.cr.business.request.ConfirmOrderListRequest;
 import com.example.cr.business.response.ConfirmOrderResponse;
@@ -28,24 +24,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.example.cr.common.util.SnowflakeUtil;
 import com.example.cr.business.request.ConfirmOrderRequest;
-import org.yaml.snakeyaml.util.EnumUtils;
 
 @Service
 public class ConfirmOrderService {
     private static final Logger log = LoggerFactory.getLogger(ConfirmOrderService.class);
     @Autowired
     ConfirmOrderMapper confirmOrderMapper;
+
     @Autowired
-    private DailyTrainMapper dailyTrainMapper;
+    DailyTrainTicketService dailyTrainTicketService;
+
     @Autowired
-    private DailyTrainTicketService dailyTrainTicketService;
+    DailyTrainCarriageService dailyTrainCarriageService;
+
+    @Autowired
+    DailyTrainSeatService dailyTrainSeatService;
 
     public PageResponse<ConfirmOrderResponse> list(ConfirmOrderListRequest request) {
         ConfirmOrderExample confirmOrderExample = new ConfirmOrderExample();
@@ -82,7 +80,6 @@ public class ConfirmOrderService {
 
         return pageResponse;
     }
-
     public void save(ConfirmOrderRequest request) {
         ConfirmOrder confirmOrder = BeanUtil.copyProperties(request, ConfirmOrder.class);
         DateTime now = DateTime.now();
@@ -113,6 +110,8 @@ public class ConfirmOrderService {
         String start = request.getStart();
         String end = request.getEnd();
 
+        List<ConfirmOrderTicketRequest> tickets = request.getTickets();
+
         // 保存到【确认订单】表，订单状态赋初始值
         ConfirmOrder confirmOrder = new ConfirmOrder();
         confirmOrder.setId(SnowflakeUtil.getId());
@@ -125,16 +124,17 @@ public class ConfirmOrderService {
         confirmOrder.setStatus(ConfirmOrderStatus.INIT.getCode());
         confirmOrder.setCreatedAt(DateTime.now());
         confirmOrder.setUpdatedAt(null);
-        List<ConfirmOrderTicketRequest> tickets = request.getTickets();
         confirmOrder.setTickets(JSONUtil.toJsonStr(tickets));
 
         confirmOrderMapper.insert(confirmOrder);
+
         // 查询【余票信息】获取真实的库存
         DailyTrainTicket dailyTrainTicket = dailyTrainTicketService.selectByUnique(date, trainCode, start, end);
         log.info("查到余票信息 = {}", dailyTrainTicket);
 
         // 预扣减余票数量，并判断余票是否足够
         preReduceTicketCount(request, dailyTrainTicket);
+
         // 选座
         // 区分是否主动选座
         ConfirmOrderTicketRequest firstTicketRequest = tickets.getFirst();
@@ -142,7 +142,7 @@ public class ConfirmOrderService {
             // 有主动选座
             log.info("本次用户购票【有】主动选座");
 
-            // 辅助: 计算座位的相对偏移量,提高多个座位的选座效率
+            // 辅助：计算座位的相对偏移值，提高多个座位的选座效率
             // 查出用户所选座位类型（总共包含哪些列）比如: 二等座 - A B C D F
             String seatTypeCode = firstTicketRequest.getSeatTypeCode();
             List<SeatCol> colEnumList = SeatCol.getColsByType(seatTypeCode);
@@ -169,9 +169,15 @@ public class ConfirmOrderService {
                 offsetList.add(offset);
             }
             log.info("计算得到所选座位相对第一个座位的偏移值={}", offsetList);
+            // 挑座位 - 按需
+            getSeat(date, trainCode, seatTypeCode, firstTicketRequest.getSeat().split("")[0], offsetList);
         } else {
             // 没有主动选座
             log.info("本次用户购票【无】主动选座");
+            // 挑座位 - 随机
+            for (ConfirmOrderTicketRequest ticket : tickets) {
+                getSeat(date, trainCode, ticket.getSeatTypeCode(), null, null);
+            }
         }
 
         // 遍历车厢，获取每个车厢的座位数据
@@ -184,37 +190,48 @@ public class ConfirmOrderService {
         // 更新【确认订单】表的订单状态=成功
     }
 
+    private void getSeat(Date date, String trainCode, String seatType, String s, List<Integer> offsetList) {
+        List<DailyTrainCarriage> carriageList = dailyTrainCarriageService.selectBySeatType(date, trainCode, seatType);
+        log.info("查到符合条件(seatType={})的车厢数量={}", seatType, carriageList.size());
+        for (DailyTrainCarriage dailyTrainCarriage : carriageList) {
+            Integer trainCarriageIndex = dailyTrainCarriage.getIndex();
+            log.info("开始从序号={}的车厢选座", trainCarriageIndex);
+            List<DailyTrainSeat> seatList = dailyTrainSeatService.selectByCarriage(date, trainCode, trainCarriageIndex);
+            log.info("车厢序号={}，座位数={}", trainCarriageIndex, seatList.size());
+        }
+    }
+
     private void preReduceTicketCount(@Valid ConfirmOrderRequest request, DailyTrainTicket dailyTrainTicket) {
         // 从用户请求中获取用户要购买的票数
         List<ConfirmOrderTicketRequest> tickets = request.getTickets();
         for (ConfirmOrderTicketRequest ticketRequest : tickets) {
             String seatTypeCode = ticketRequest.getSeatTypeCode();
             SeatType seatType = EnumUtil.getBy(SeatType::getCode, seatTypeCode);
-            switch (seatType) {
+            switch(seatType){
                 case YDZ -> {
                     int countAfterReduce = dailyTrainTicket.getYdz() - 1;
-                    if (countAfterReduce < 0) {
+                    if (countAfterReduce < 0){
                         throw new CommonBusinessException("余票不足");
                     }
                     dailyTrainTicket.setYdz(countAfterReduce);
                 }
                 case EDZ -> {
                     int countAfterReduce = dailyTrainTicket.getEdz() - 1;
-                    if (countAfterReduce < 0) {
+                    if (countAfterReduce < 0){
                         throw new CommonBusinessException("余票不足");
                     }
                     dailyTrainTicket.setEdz(countAfterReduce);
                 }
                 case RW -> {
                     int countAfterReduce = dailyTrainTicket.getRw() - 1;
-                    if (countAfterReduce < 0) {
+                    if (countAfterReduce < 0){
                         throw new CommonBusinessException("余票不足");
                     }
                     dailyTrainTicket.setRw(countAfterReduce);
                 }
                 case YW -> {
                     int countAfterReduce = dailyTrainTicket.getYw() - 1;
-                    if (countAfterReduce < 0) {
+                    if (countAfterReduce < 0){
                         throw new CommonBusinessException("余票不足");
                     }
                     dailyTrainTicket.setYw(countAfterReduce);
