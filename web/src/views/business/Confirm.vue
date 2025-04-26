@@ -242,9 +242,6 @@ const submitOrder = async (confirmDate) => {
   try {
     const res = await confirmOrder(confirmDate)
     if (res.code === 200) {
-      loading.value = false
-      confirmLoading.value = false
-      dialogVisible.value = false
       // 清除store中的数据
       ticketStore.clearTicketInfo()
       ElMessage.success('订单提交成功！')
@@ -254,6 +251,12 @@ const submitOrder = async (confirmDate) => {
     }
   } catch (error) {
     ElMessage.error(error.response.data.msg || '订单提交失败')
+  } finally {
+    loading.value = false
+    confirmLoading.value = false
+    dialogVisible.value = false
+    // 重置选座数据
+    selectedSeats.value = []
   }
 }
 
