@@ -4,6 +4,7 @@ import java.util.Date;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.EnumUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.example.cr.business.entity.DailyTrainTicket;
 import com.example.cr.business.enums.ConfirmOrderStatus;
@@ -132,6 +133,16 @@ public class ConfirmOrderService {
         // 预扣减余票数量，并判断余票是否足够
         preReduceTicketCount(request, dailyTrainTicket);
         // 选座
+            // 区分是否主动选座
+        ConfirmOrderTicketRequest firstTicketRequest = request.getTickets().getFirst();
+        if (StrUtil.isNotBlank(firstTicketRequest.getSeat())) {
+            // 有主动选座
+            log.info("本次用户购票【有】主动选座");
+        } else {
+            // 没有主动选座
+            log.info("本次用户购票【无】主动选座");
+        }
+
         // 遍历车厢，获取每个车厢的座位数据
         // 选座：挑选符合条件的座位，如果这个车厢不满足，则进入下个车厢（隐藏条件：多个选座必须在同一个车厢）
 
