@@ -1,5 +1,6 @@
 package com.example.cr.business.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import cn.hutool.core.bean.BeanUtil;
@@ -8,6 +9,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.example.cr.business.entity.DailyTrainTicket;
 import com.example.cr.business.enums.ConfirmOrderStatus;
+import com.example.cr.business.enums.SeatCol;
 import com.example.cr.business.enums.SeatType;
 import com.example.cr.business.mapper.DailyTrainMapper;
 import com.example.cr.business.request.ConfirmOrderTicketRequest;
@@ -123,7 +125,8 @@ public class ConfirmOrderService {
         confirmOrder.setStatus(ConfirmOrderStatus.INIT.getCode());
         confirmOrder.setCreatedAt(DateTime.now());
         confirmOrder.setUpdatedAt(null);
-        confirmOrder.setTickets(JSONUtil.toJsonStr(request.getTickets()));
+        List<ConfirmOrderTicketRequest> tickets = request.getTickets();
+        confirmOrder.setTickets(JSONUtil.toJsonStr(tickets));
 
         confirmOrderMapper.insert(confirmOrder);
         // 查询【余票信息】获取真实的库存
@@ -133,11 +136,39 @@ public class ConfirmOrderService {
         // 预扣减余票数量，并判断余票是否足够
         preReduceTicketCount(request, dailyTrainTicket);
         // 选座
-            // 区分是否主动选座
-        ConfirmOrderTicketRequest firstTicketRequest = request.getTickets().getFirst();
+        // 区分是否主动选座
+        ConfirmOrderTicketRequest firstTicketRequest = tickets.getFirst();
         if (StrUtil.isNotBlank(firstTicketRequest.getSeat())) {
             // 有主动选座
             log.info("本次用户购票【有】主动选座");
+
+            // 辅助: 计算座位的相对偏移量,提高多个座位的选座效率
+            // 查出用户所选座位类型（总共包含哪些列）比如: 二等座 - A B C D F
+            String seatTypeCode = firstTicketRequest.getSeatTypeCode();
+            List<SeatCol> colEnumList = SeatCol.getColsByType(seatTypeCode);
+            log.info("本次选座的座位类型={}，包含的列={}", SeatType.getEnumByCode(seatTypeCode), colEnumList);
+            // 组成和前端一样的两排初始座位列表，用作参照的两排座位
+            List<String> referSeatList = new ArrayList<>();
+            for (int i = 1; i <= 2; i++) {
+                for (SeatCol seatCol : colEnumList) {
+                    referSeatList.add(seatCol.getCode() + i);
+                }
+            }
+            log.info("用作参照的两排座位={}", referSeatList);
+            // 绝对偏移值
+            List<Integer> aboluteOffsetList = new ArrayList<>();
+            List<Integer> offsetList = new ArrayList<>();
+            for (ConfirmOrderTicketRequest ticketReq : tickets) {
+                int index = referSeatList.indexOf(ticketReq.getSeat());
+                aboluteOffsetList.add(index);
+            }
+            log.info("计算得到所选座位的绝对偏移值；{}", aboluteOffsetList);
+            // 真正需要的偏移值（相对于第一个座位的偏移值）
+            for (Integer index : aboluteOffsetList) {
+                int offset = index - aboluteOffsetList.getFirst();
+                offsetList.add(offset);
+            }
+            log.info("计算得到所选座位相对第一个座位的偏移值={}", offsetList);
         } else {
             // 没有主动选座
             log.info("本次用户购票【无】主动选座");
