@@ -39,7 +39,7 @@ public class DailyTrainSeatService {
 
     public PageResponse<DailyTrainSeatResponse> list(DailyTrainSeatListRequest request) {
         DailyTrainSeatExample dailyTrainSeatExample = new DailyTrainSeatExample();
-        dailyTrainSeatExample.setOrderByClause("id desc");
+        dailyTrainSeatExample.setOrderByClause("id asc");
 
         // 处理搜索条件
         DailyTrainSeatExample.Criteria criteria = dailyTrainSeatExample.createCriteria();
