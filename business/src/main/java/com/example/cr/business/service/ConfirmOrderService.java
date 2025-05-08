@@ -47,6 +47,9 @@ public class ConfirmOrderService {
     @Autowired
     DailyTrainSeatService dailyTrainSeatService;
 
+    @Autowired
+    AfterConfirmOrderService afterConfirmOrderService;
+
     public PageResponse<ConfirmOrderResponse> list(ConfirmOrderListRequest request) {
         ConfirmOrderExample confirmOrderExample = new ConfirmOrderExample();
         confirmOrderExample.setOrderByClause("id desc");
@@ -195,6 +198,7 @@ public class ConfirmOrderService {
         // 真实扣减库存，更新【余票信息】的余票
         // 记录会员的购票记录
         // 更新【确认订单】表的订单状态=成功
+        afterConfirmOrderService.afterConfirm(finalSeatList);
     }
 
     /**
