@@ -270,7 +270,7 @@ const menuConfig = [
       {
         path: '/ticket',
         title: '会员车票',
-        icon: Tickets
+        icon: Files
       },
     ]
   },
