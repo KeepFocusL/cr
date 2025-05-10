@@ -182,7 +182,7 @@ const menuConfig = [
   {
     path: '/my-ticket',
     title: '我的车票',
-    icon: Ticket
+    icon: Files
   },
   {
     path: '/passenger',
