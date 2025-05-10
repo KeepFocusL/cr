@@ -18,7 +18,7 @@ public class CodeGenerator {
     static String frontendType = "web";
 
     static String vuePath = frontendType + "/src/views/[module]/";
-    static boolean readOnly = false;
+    static boolean readOnly = true;
 
     static String apiJsPath = frontendType + "/src/api/[module]/";
 
