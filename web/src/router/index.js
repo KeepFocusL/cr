@@ -48,6 +48,12 @@ const router = createRouter({
           name: 'Passenger',
           component: () => import('../views/user/Passenger.vue'),
           meta: { title: '我的乘车人' }
+        },
+        {
+          path: 'my-ticket',
+          name: 'MyTicket',
+          component: () => import('../views/user/Ticket.vue'),
+          meta: { title: '我的车票' }
         }
       ]
     },

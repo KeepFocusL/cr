@@ -180,6 +180,11 @@ const menuConfig = [
     icon: Ticket
   },
   {
+    path: '/my-ticket',
+    title: '我的车票',
+    icon: Ticket
+  },
+  {
     path: '/passenger',
     title: '我的乘车人',
     icon: Avatar
