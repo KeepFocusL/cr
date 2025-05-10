@@ -14,6 +14,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.util.ObjectUtil;
+import com.example.cr.common.util.SnowflakeUtil;
+import com.example.cr.user.request.TicketRequest;
 
 @Service
 public class TicketService {
@@ -49,5 +53,25 @@ public class TicketService {
         pageResponse.setList(list);
 
         return pageResponse;
+    }
+    public void save(TicketRequest request) {
+        Ticket ticket = BeanUtil.copyProperties(request, Ticket.class);
+        DateTime now = DateTime.now();
+        if (ObjectUtil.isNull(ticket.getId()) || ticket.getId() == 0L) {
+            ticket.setId(SnowflakeUtil.getId());
+            ticket.setCreatedAt(now);
+            ticket.setUpdatedAt(now);
+            ticketMapper.insert(ticket);
+        } else {
+            ticket.setUpdatedAt(now);
+            ticketMapper.updateByPrimaryKeySelective(ticket);
+        }
+    }
+
+    public int deleteBatch(List<Long> ids) {
+        TicketExample ticketExample = new TicketExample();
+        TicketExample.Criteria criteria = ticketExample.createCriteria();
+        criteria.andIdIn(ids);
+        return ticketMapper.deleteByExample(ticketExample);
     }
 }
