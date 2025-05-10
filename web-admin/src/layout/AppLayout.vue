@@ -258,8 +258,18 @@ const menuConfig = [
         icon: Ticket
       },
       {
+        path: '/my-ticket',
+        title: '我的车票',
+        icon: Ticket
+      },
+      {
         path: '/confirm-order',
         title: '确认订单',
+        icon: Tickets
+      },
+      {
+        path: '/ticket',
+        title: '会员车票',
         icon: Tickets
       },
     ]
