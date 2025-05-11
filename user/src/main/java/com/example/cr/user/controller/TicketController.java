@@ -1,5 +1,6 @@
 package com.example.cr.user.controller;
 
+import com.example.cr.common.context.UserContext;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.common.response.R;
 import com.example.cr.user.request.TicketListRequest;
@@ -17,6 +18,7 @@ public class TicketController {
 
     @GetMapping("list")
     public R<PageResponse<TicketResponse>> list(@Valid TicketListRequest request) {
+        request.setUserId(UserContext.getId());
         PageResponse<TicketResponse> list = ticketService.list(request);
         return R.ok(list);
     }

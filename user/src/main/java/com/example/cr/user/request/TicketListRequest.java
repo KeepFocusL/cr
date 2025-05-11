@@ -9,12 +9,25 @@ public class TicketListRequest extends PageRequest {
      */
     private String keyword;
 
+    /**
+     * 当前登录的会员id
+     */
+    Long userId;
+
     public String getKeyword() {
         return keyword;
     }
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override

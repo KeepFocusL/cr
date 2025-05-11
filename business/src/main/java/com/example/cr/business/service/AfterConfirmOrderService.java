@@ -36,7 +36,7 @@ public class AfterConfirmOrderService {
      * 选中座位后的事务处理：
      *         座位表修改售卖情况 sell 字段  （✔）
      *         真实扣减库存，更新【余票信息】的余票 (✔)
-     *         记录会员的购票记录
+     *         记录会员的购票记录 (✔)
      *         更新【确认订单】表的订单状态=成功
      */
     @Transactional

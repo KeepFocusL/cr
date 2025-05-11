@@ -1,6 +1,8 @@
 package com.example.cr.user.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ObjUtil;
+import com.example.cr.common.context.UserContext;
 import com.example.cr.common.request.UserTicketRequest;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.user.entity.Ticket;
@@ -35,6 +37,10 @@ public class TicketService {
         if (request.getKeyword() != null && !request.getKeyword().isEmpty()) {
             String keyword = "%" + request.getKeyword() + "%";
             criteria.andPassengerNameLike(keyword);
+        }
+
+        if (ObjUtil.isNotNull(request.getUserId())){
+            criteria.andUserIdEqualTo(UserContext.getId());
         }
 
         PageHelper.startPage(request.getPage(), request.getSize());
