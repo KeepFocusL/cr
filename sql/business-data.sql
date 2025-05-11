@@ -18,9 +18,8 @@ INSERT INTO business.train_station (id, train_code, `index`, name, name_pinyin, 
 INSERT INTO business.train_station (id, train_code, `index`, name, name_pinyin, in_time, out_time, stop_time, km, created_at, updated_at) VALUES (1911230828139122688, 'G5114', 3, '福州', 'fuzhou', '16:09:00', '16:09:00', '00:00:00', 38.00, '2025-04-13 09:31:53.037', '2025-04-13 09:31:53.037');
 
 -- 火车车厢（不完整）
-INSERT INTO business.train_carriage (id, train_code, `index`, seat_type, seat_count, row_count, col_count, created_at, updated_at) VALUES (1911231342205603840, 'G5114', 1, '2', 15, 3, 5, '2025-04-13 09:33:55.600', '2025-04-13 09:33:55.600');
-INSERT INTO business.train_carriage (id, train_code, `index`, seat_type, seat_count, row_count, col_count, created_at, updated_at) VALUES (1911231416759357440, 'G5114', 2, '1', 12, 3, 4, '2025-04-13 09:34:13.375', '2025-04-13 09:34:13.375');
+INSERT INTO business.train_carriage (id, train_code, `index`, seat_type, seat_count, row_count, col_count, created_at, updated_at) VALUES (1911231416759357440, 'G5114', 1, '1', 12, 3, 4, '2025-04-13 09:34:13.375', '2025-04-13 09:34:13.375');
+INSERT INTO business.train_carriage (id, train_code, `index`, seat_type, seat_count, row_count, col_count, created_at, updated_at) VALUES (1911231342205603840, 'G5114', 2, '2', 15, 3, 5, '2025-04-13 09:33:55.600', '2025-04-13 09:33:55.600');
+INSERT INTO business.train_carriage (id, train_code, `index`, seat_type, seat_count, row_count, col_count, created_at, updated_at) VALUES (1911231416759357140, 'G5114', 3, '2', 20, 4, 5, '2025-04-13 09:34:13.375', '2025-04-13 09:34:13.375');
 
-
--- 火车座位（不完整）
--- 火车座位在最后自动生成
+-- 火车座位(自动生成)

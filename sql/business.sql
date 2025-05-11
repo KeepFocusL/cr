@@ -11,7 +11,6 @@ create table `station`
     unique key `name_unique` (`name`)
 ) comment ='车站';
 
-
 drop table if exists `train`;
 create table `train`
 (
@@ -30,12 +29,13 @@ create table `train`
     unique key `code_unique` (`code`)
 ) comment='车次';
 
+
 drop table if exists `train_station`;
 create table `train_station`
 (
     `id`          bigint        not null comment 'id',
     `train_code`  varchar(20)   not null comment '车次编号|searchable',
-    `index`       int           not null comment '站序',
+    `index`       int           not null comment '站序|约定第一站是0',
     `name`        varchar(20)   not null comment '站名',
     `name_pinyin` varchar(50)   not null comment '站名拼音',
     `in_time`     time comment '进站时间',
@@ -48,6 +48,7 @@ create table `train_station`
     unique key `train_code_index_unique` (`train_code`, `index`),
     unique key `train_code_name_unique` (`train_code`, `name`)
 ) comment ='火车车站';
+
 
 drop table if exists `train_carriage`;
 create table `train_carriage`
@@ -65,6 +66,7 @@ create table `train_carriage`
     primary key (`id`)
 ) comment ='火车车厢';
 
+
 drop table if exists `train_seat`;
 create table `train_seat`
 (
@@ -79,6 +81,7 @@ create table `train_seat`
     `updated_at` datetime(3) null comment '更新时间',
     primary key (`id`)
 ) comment ='车厢座位';
+
 
 -- 每日车次
 drop table if exists `daily_train`;
@@ -99,6 +102,7 @@ create table `daily_train`
     primary key (`id`),
     unique key `date_code_unique` (`date`, `code`)
 ) comment='每日车次';
+
 
 -- 每日火车车站
 drop table if exists `daily_train_station`;
@@ -121,6 +125,7 @@ create table `daily_train_station`
     unique key `date_train_code_name_unique` (`date`, `train_code`, `name`)
 ) comment ='每日火车车站';
 
+
 -- 每日火车车厢
 drop table if exists `daily_train_carriage`;
 create table `daily_train_carriage`
@@ -138,6 +143,7 @@ create table `daily_train_carriage`
     unique key `date_train_code_index_unique` (`date`, `train_code`, `index`),
     primary key (`id`)
 ) comment ='每日火车车厢';
+
 
 -- 每日座位
 drop table if exists `daily_train_seat`;
