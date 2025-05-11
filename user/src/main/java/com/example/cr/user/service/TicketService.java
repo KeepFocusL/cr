@@ -1,6 +1,7 @@
 package com.example.cr.user.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.example.cr.common.request.UserTicketRequest;
 import com.example.cr.common.response.PageResponse;
 import com.example.cr.user.entity.Ticket;
 import com.example.cr.user.entity.TicketExample;
@@ -54,18 +55,13 @@ public class TicketService {
 
         return pageResponse;
     }
-    public void save(TicketRequest request) {
+    public void save(UserTicketRequest request) {
         Ticket ticket = BeanUtil.copyProperties(request, Ticket.class);
         DateTime now = DateTime.now();
-        if (ObjectUtil.isNull(ticket.getId()) || ticket.getId() == 0L) {
-            ticket.setId(SnowflakeUtil.getId());
-            ticket.setCreatedAt(now);
-            ticket.setUpdatedAt(now);
-            ticketMapper.insert(ticket);
-        } else {
-            ticket.setUpdatedAt(now);
-            ticketMapper.updateByPrimaryKeySelective(ticket);
-        }
+        ticket.setId(SnowflakeUtil.getId());
+        ticket.setCreatedAt(now);
+        ticket.setUpdatedAt(now);
+        ticketMapper.insert(ticket);
     }
 
     public int deleteBatch(List<Long> ids) {

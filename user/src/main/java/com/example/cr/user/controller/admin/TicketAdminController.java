@@ -22,11 +22,6 @@ public class TicketAdminController {
         PageResponse<TicketResponse> list = ticketService.list(request);
         return R.ok(list);
     }
-    @PostMapping("save")
-    public R<Object> save(@Valid @RequestBody TicketRequest request) {
-        ticketService.save(request);
-        return R.ok();
-    }
 
     @DeleteMapping("delete")
     public R<Integer> delete(@RequestBody List<Long> ids) {

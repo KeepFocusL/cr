@@ -75,6 +75,9 @@ public class AfterConfirmOrderService {
                     minEndIndex,
                     maxEndIndex);
             log.info("完成：真实扣减库存，更新【余票信息】的余票");
+
+            // 保存用户购买的车票到 ticket 表
+            // 在 business 中只要调用某一个对象的某一个方法就自动发起 http 请求
         }
     }
 }
