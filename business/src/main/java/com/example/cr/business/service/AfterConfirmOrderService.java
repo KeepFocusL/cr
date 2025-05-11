@@ -2,8 +2,13 @@ package com.example.cr.business.service;
 
 import com.example.cr.business.entity.DailyTrainSeat;
 import com.example.cr.business.entity.DailyTrainTicket;
+import com.example.cr.business.feign.UserFeign;
 import com.example.cr.business.mapper.DailyTrainSeatMapper;
 import com.example.cr.business.mapper.custom.DailyTrainTicketMapperCustom;
+import com.example.cr.business.request.ConfirmOrderTicketRequest;
+import com.example.cr.common.context.UserContext;
+import com.example.cr.common.request.UserTicketRequest;
+import com.example.cr.common.response.R;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +29,9 @@ public class AfterConfirmOrderService {
     @Autowired
     DailyTrainTicketMapperCustom dailyTrainTicketMapperCustom;
 
+    @Resource
+    UserFeign userFeign;
+
     /**
      * 选中座位后的事务处理：
      *         座位表修改售卖情况 sell 字段  （✔）
@@ -32,8 +40,9 @@ public class AfterConfirmOrderService {
      *         更新【确认订单】表的订单状态=成功
      */
     @Transactional
-    public void afterConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalSeatList){
-        for (DailyTrainSeat dailyTrainSeat : finalSeatList) {
+    public void afterConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalSeatList, List<ConfirmOrderTicketRequest> tickets) {
+        for (int j = 0; j < finalSeatList.size(); j++) {
+            DailyTrainSeat dailyTrainSeat = finalSeatList.get(j);
             DailyTrainSeat seatForUpdate = new DailyTrainSeat();
             seatForUpdate.setId(dailyTrainSeat.getId());
             seatForUpdate.setSell(dailyTrainSeat.getSell());
@@ -76,8 +85,23 @@ public class AfterConfirmOrderService {
                     maxEndIndex);
             log.info("完成：真实扣减库存，更新【余票信息】的余票");
 
-            // 保存用户购买的车票到 ticket 表
-            // 在 business 中只要调用某一个对象的某一个方法就自动发起 http 请求
+            // 调用会员服务接口，为会员增加一条车票购买记录
+            UserTicketRequest userTicketRequest = new UserTicketRequest();
+            userTicketRequest.setUserId(UserContext.getId());
+            userTicketRequest.setPassengerId(tickets.get(j).getPassengerId());
+            userTicketRequest.setPassengerName(tickets.get(j).getPassengerName());
+            userTicketRequest.setTrainDate(dailyTrainTicket.getDate());
+            userTicketRequest.setTrainCode(dailyTrainTicket.getTrainCode());
+            userTicketRequest.setCarriageIndex(dailyTrainSeat.getCarriageIndex());
+            userTicketRequest.setSeatRow(dailyTrainSeat.getRow());
+            userTicketRequest.setSeatCol(dailyTrainSeat.getCol());
+            userTicketRequest.setStartStation(dailyTrainTicket.getStart());
+            userTicketRequest.setStartTime(dailyTrainTicket.getStartTime());
+            userTicketRequest.setEndStation(dailyTrainTicket.getEnd());
+            userTicketRequest.setEndTime(dailyTrainTicket.getEndTime());
+            userTicketRequest.setSeatType(dailyTrainSeat.getSeatType());
+            R<Object> responseFromUserModule = userFeign.save(userTicketRequest);
+            log.info("完成：跨服务调用 user 模块的接口，保存会员车票购买记录。返回={}", responseFromUserModule);
         }
     }
 }
