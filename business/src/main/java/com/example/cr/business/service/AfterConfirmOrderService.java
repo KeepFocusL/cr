@@ -1,8 +1,11 @@
 package com.example.cr.business.service;
 
+import com.example.cr.business.entity.ConfirmOrder;
 import com.example.cr.business.entity.DailyTrainSeat;
 import com.example.cr.business.entity.DailyTrainTicket;
+import com.example.cr.business.enums.ConfirmOrderStatus;
 import com.example.cr.business.feign.UserFeign;
+import com.example.cr.business.mapper.ConfirmOrderMapper;
 import com.example.cr.business.mapper.DailyTrainSeatMapper;
 import com.example.cr.business.mapper.custom.DailyTrainTicketMapperCustom;
 import com.example.cr.business.request.ConfirmOrderTicketRequest;
@@ -32,6 +35,9 @@ public class AfterConfirmOrderService {
     @Resource
     UserFeign userFeign;
 
+    @Autowired
+    ConfirmOrderMapper confirmOrderMapper;
+
     /**
      * 选中座位后的事务处理：
      *         座位表修改售卖情况 sell 字段  （✔）
@@ -40,7 +46,7 @@ public class AfterConfirmOrderService {
      *         更新【确认订单】表的订单状态=成功
      */
     @Transactional
-    public void afterConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalSeatList, List<ConfirmOrderTicketRequest> tickets) {
+    public void afterConfirm(DailyTrainTicket dailyTrainTicket, List<DailyTrainSeat> finalSeatList, List<ConfirmOrderTicketRequest> tickets, ConfirmOrder confirmOrder) {
         for (int j = 0; j < finalSeatList.size(); j++) {
             DailyTrainSeat dailyTrainSeat = finalSeatList.get(j);
             DailyTrainSeat seatForUpdate = new DailyTrainSeat();
@@ -102,6 +108,13 @@ public class AfterConfirmOrderService {
             userTicketRequest.setSeatType(dailyTrainSeat.getSeatType());
             R<Object> responseFromUserModule = userFeign.save(userTicketRequest);
             log.info("完成：跨服务调用 user 模块的接口，保存会员车票购买记录。返回={}", responseFromUserModule);
+
+            ConfirmOrder confirmOrderForUpdate = new ConfirmOrder();
+            confirmOrderForUpdate.setId(confirmOrder.getId());
+            confirmOrderForUpdate.setStatus(ConfirmOrderStatus.SUCCESS.getCode());
+            confirmOrderForUpdate.setUpdatedAt(new Date());
+            confirmOrderMapper.updateByPrimaryKeySelective(confirmOrderForUpdate);
+            log.info("完成：更新【确认订单】表的订单状态=成功");
         }
     }
 }
