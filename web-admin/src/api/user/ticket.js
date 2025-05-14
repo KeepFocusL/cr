@@ -23,7 +23,3 @@ export function listTicket(params = {}) {
 export function saveTicket(data) {
   return http.post(MODULE_PREFIX + '/admin/ticket/save', data)
 }
-
-export function deleteTicket(ids) {
-  return http.delete(MODULE_PREFIX + '/admin/ticket/delete', { data: ids })
-}

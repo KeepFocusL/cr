@@ -2,7 +2,7 @@
 import {ref, reactive, onMounted, computed} from 'vue'
 import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
-import {saveTicket, deleteTicket, listTicket} from '@/api/user/ticket.js'
+import {saveTicket, listTicket} from '@/api/user/ticket.js'
 
 // 会员车票列表数据
 const ticketList = ref([])
@@ -121,69 +121,10 @@ const dialogTitle = computed(() => {
   return ticketForm.id ? '编辑会员车票' : '新增会员车票'
 })
 
-// 删除会员车票
-const handleDelete = async (ids) => {
-  try {
-    const res = await deleteTicket(ids)
-    if (res.code === 200) {
-      ElMessage.success('删除成功')
-      // 如果当前页只剩要被删除的条数且不是第一页，删除后自动跳转到上一页
-      if (ticketList.value.length === ids.length && pagination.page > 1) {
-        pagination.page--
-      }
-      await getTicketList()
-    } else {
-      ElMessage.error(res.msg || '删除失败')
-    }
-  } catch (error) {
-    ElMessage.error(error.response?.data?.msg || '删除失败')
-  }
-}
-
-// 处理单个删除 - 二次确认
-const handleSingleDelete = (row) => {
-  ElMessageBox.confirm(
-    '确定要删除会员车票 ' + row.id + ' 吗？',
-    '删除确认',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }
-  )
-    .then(() => handleDelete([row.id]))
-    .catch(() => {
-      console.log('取消删除，不做任何操作')
-    })
-}
-
 // 计算属性：检查是否有选中的行
 const hasSelectedRows = computed(() => {
   return tableRef.value ? tableRef.value.getSelectionRows().length > 0 : false
 })
-
-// 处理批量删除 - 二次确认
-const handleBatchDelete = async () => {
-  const selectedRows = tableRef.value.getSelectionRows()
-  if (!selectedRows || selectedRows.length === 0) {
-    ElMessage.warning('请先选择要删除的记录')
-    return
-  }
-  // 弹出确认对话框
-  ElMessageBox.confirm(
-    '确定要删除选中的 ' + selectedRows.length + ' 记录吗？',
-    '删除确认',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }
-  )
-    .then(() => handleDelete(selectedRows.map(item => item.id)))
-    .catch(() => {
-      console.log('取消删除，不做任何操作')
-    })
-}
 
 const tableLoading = ref(false)
 
@@ -271,7 +212,6 @@ const handleReset = () => {
     <!-- 顶部按钮 -->
     <div class="top-tools">
       <div class="left">
-        <el-button type="danger" @click="handleBatchDelete" :disabled="!hasSelectedRows">批量删除</el-button>
         <el-button :icon="Refresh" @click="handleRefresh">刷新</el-button>
       </div>
       <div class="right">
@@ -324,7 +264,6 @@ const handleReset = () => {
       <el-table-column label="操作">
         <template #default="{ row }">
           <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
-          <el-button type="danger" link @click="handleSingleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

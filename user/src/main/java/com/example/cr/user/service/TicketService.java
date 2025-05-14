@@ -69,11 +69,4 @@ public class TicketService {
         ticket.setUpdatedAt(now);
         ticketMapper.insert(ticket);
     }
-
-    public int deleteBatch(List<Long> ids) {
-        TicketExample ticketExample = new TicketExample();
-        TicketExample.Criteria criteria = ticketExample.createCriteria();
-        criteria.andIdIn(ids);
-        return ticketMapper.deleteByExample(ticketExample);
-    }
 }
