@@ -246,12 +246,28 @@ const handleReset = () => {
 }
 
 const handleDailyData = () => {
-  genDailyData(selectedDate.value)
-    .then((res) => {
-      ElMessage.success('生成每日数据成功')
+  const date = selectedDate.value;
+
+  ElMessageBox.confirm(
+    `确定要生成【${selectedDate.value}】的每日数据吗？`,
+    '生成确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+  )
+    .then(() => {
+      genDailyData(date)
+        .then((res) => {
+          ElMessage.success('生成每日数据成功')
+        })
+        .catch((error) => {
+          ElMessage.error(error.response?.data?.msg || '生成每日数据失败')
+        })
     })
-    .catch((error) => {
-      ElMessage.error(error.response?.data?.msg || '生成每日数据失败')
+    .catch(() => {
+      console.log('取消生成，不做任何操作')
     })
 }
 
