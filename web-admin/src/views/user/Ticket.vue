@@ -121,11 +121,6 @@ const dialogTitle = computed(() => {
   return ticketForm.id ? '编辑会员车票' : '新增会员车票'
 })
 
-// 计算属性：检查是否有选中的行
-const hasSelectedRows = computed(() => {
-  return tableRef.value ? tableRef.value.getSelectionRows().length > 0 : false
-})
-
 const tableLoading = ref(false)
 
 // 搜索表单
@@ -240,7 +235,6 @@ const handleReset = () => {
       style="width: 100%"
       border
     >
-      <el-table-column type="selection"></el-table-column>
       <el-table-column prop="passengerId" label="乘客id"/>
       <el-table-column prop="passengerName" label="乘客姓名"/>
       <el-table-column prop="trainDate" label="日期"/>
