@@ -138,7 +138,8 @@ import {
   Ticket,
   Calendar,
   Timer,
-  Tickets
+  Tickets,
+  DataLine
 
 } from '@element-plus/icons-vue'
 import {useUserStore} from '@/stores/user.js'
@@ -195,7 +196,7 @@ const menuConfig = [
   {
     path: '/course',
     title: '课程管理',
-    icon: Monitor
+    icon: DataLine
   },
   {
     title: '基础数据',
@@ -255,11 +256,6 @@ const menuConfig = [
       {
         path: '/daily-train-ticket',
         title: '余票信息',
-        icon: Ticket
-      },
-      {
-        path: '/my-ticket',
-        title: '我的车票',
         icon: Ticket
       },
       {

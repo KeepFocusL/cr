@@ -1,5 +1,5 @@
 ### 测试生成每日数据
-GET http://localhost:8082/admin/daily-train/gen-daily/2025-04-04
+GET http://localhost:8082/admin/daily-train/gen-daily/2025-05-12
 
 ### 测试生成座位
 GET http://localhost:8082/admin/train/gen-seat/G5115

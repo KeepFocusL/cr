@@ -2,9 +2,11 @@
 import {ref, reactive, onMounted, computed} from 'vue'
 import {Plus, Refresh} from '@element-plus/icons-vue'
 import {ElMessage, ElMessageBox} from 'element-plus'
-import {saveTrain, deleteTrain, listTrain, genDailyData, genSeat} from '@/api/business/train.js'
+import {saveTrain, deleteTrain, listTrain, genSeat} from '@/api/business/train.js'
+import {genDailyData} from '@/api/business/dailyTrain.js'
 import StationSelect from "@/components/StationSelect.vue";
 import {pinyin} from "pinyin-pro";
+import dayjs from "dayjs";
 
 // 车次列表数据
 const trainList = ref([])
@@ -243,8 +245,8 @@ const handleReset = () => {
   handleSearch()
 }
 
-const handleDailyData = (date) => {
-  genDailyData(date)
+const handleDailyData = () => {
+  genDailyData(selectedDate.value)
     .then((res) => {
       ElMessage.success('生成每日数据成功')
     })
@@ -297,6 +299,9 @@ const handleEndChange = (value) => {
   }
   trainForm.endPinyin = pinyin(value, { toneType: 'none', type: 'string' }).replace(/\s/g, '')
 }
+
+// 日期选择
+const selectedDate = ref(dayjs().add(15, 'day').format('YYYY-MM-DD'))
 </script>
 
 <template>
@@ -309,6 +314,25 @@ const handleEndChange = (value) => {
         <el-button :icon="Refresh" @click="handleRefresh">刷新</el-button>
       </div>
       <div class="right">
+        <el-form :inline="true">
+          <el-form-item class="mb0">
+            <el-date-picker
+              v-model="selectedDate"
+              type="date"
+              value-format="YYYY-MM-DD"
+              placeholder="选择日期"
+            />
+          </el-form-item>
+          <el-form-item class="mb0">
+            <el-button
+              type="primary"
+              :icon="Calendar"
+              @click="handleDailyData"
+            >
+              生成每日数据
+            </el-button>
+          </el-form-item>
+        </el-form>
         <el-form :inline="true" :model="searchForm" @submit.prevent>
           <el-form-item class="mb0">
             <el-input

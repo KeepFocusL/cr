@@ -27,3 +27,8 @@ export function saveDailyTrain(data) {
 export function deleteDailyTrain(ids) {
   return http.delete(MODULE_PREFIX + '/admin/daily-train/delete', { data: ids })
 }
+
+export function genDailyData(date){
+  return http.get(MODULE_PREFIX + '/admin/daily-train/gen-daily/' + date)
+}
+h
