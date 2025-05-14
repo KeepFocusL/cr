@@ -375,7 +375,6 @@ const selectedDate = ref(dayjs().add(15, 'day').format('YYYY-MM-DD'))
         <template #default="{ row }">
           <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
           <el-button type="danger" link @click="handleSingleDelete(row)">删除</el-button>
-          <el-button type="primary" link @click="handleDailyData('2025-04-15')">生成每日数据</el-button>
           <el-button type="primary" link @click="handleGenSeat(row)">自动生成座位</el-button>
         </template>
       </el-table-column>
