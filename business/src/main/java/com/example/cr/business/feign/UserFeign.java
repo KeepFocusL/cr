@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "user", url = "http://127.0.0.1:8081")
+@FeignClient("user")
 public interface UserFeign {
 
     @PostMapping("/feign/ticket/save")

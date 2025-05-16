@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Date;
 
-@FeignClient(name = "business", url = "http://localhost:8082")
+@FeignClient("business")
 public interface BusinessFeign {
     @GetMapping("test")
     String test();
