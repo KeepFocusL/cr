@@ -22,7 +22,7 @@ spring:
             - Path=/u/**
           filters:
             - StripPrefix=1
-          uri: http://127.0.0.1:8081
+          uri: lb://user
         - id: demo
           predicates:
             - Path=/d/**
