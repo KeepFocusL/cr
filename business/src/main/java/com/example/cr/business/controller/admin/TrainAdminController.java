@@ -39,4 +39,9 @@ public class TrainAdminController {
         trainService.genSeat(trainCode);
         return R.ok();
     }
+
+    @GetMapping("test-cache")
+    public void testCache(){
+        trainService.testCache();
+    }
 }

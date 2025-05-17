@@ -147,4 +147,13 @@ public class TrainService {
             }
         }
     }
+
+    public void testCache() {
+        System.out.println("TrainService.testCache - 第一次");
+        List<Train> trains = selectAll();
+        // 模拟经过了很多复杂的业务 又需要查询同样的 sql
+        System.out.println("TrainService.testCache - 第二次");
+        trains = selectAll();
+        // 查看控制台的日志输出
+    }
 }

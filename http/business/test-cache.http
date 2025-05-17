@@ -1,0 +1,3 @@
+### 假设这是一个高频访问的接口(读多写少，比如余票查询)
+GET http://localhost:8082/admin/train/test-cache
+Accept: application/json
