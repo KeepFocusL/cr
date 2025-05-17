@@ -20,6 +20,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.example.cr.common.util.SnowflakeUtil;
 import com.example.cr.business.request.TrainRequest;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TrainService {
@@ -148,6 +149,7 @@ public class TrainService {
         }
     }
 
+    @Transactional
     public void testCache() {
         System.out.println("TrainService.testCache - 第一次");
         List<Train> trains = selectAll();
