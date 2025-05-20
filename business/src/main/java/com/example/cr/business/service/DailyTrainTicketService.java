@@ -19,13 +19,13 @@ import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
-
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.ObjectUtil;
 import com.example.cr.common.util.SnowflakeUtil;
@@ -43,6 +43,7 @@ public class DailyTrainTicketService {
     @Autowired
     DailyTrainSeatService dailyTrainSeatService;
 
+    @Cacheable("DailyTrainTicketService.list")
     public PageResponse<DailyTrainTicketResponse> list(DailyTrainTicketListRequest request) {
         DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();
         dailyTrainTicketExample.setOrderByClause("id desc");
@@ -78,7 +79,6 @@ public class DailyTrainTicketService {
 
         return pageResponse;
     }
-
     public void save(DailyTrainTicketRequest request) {
         DailyTrainTicket dailyTrainTicket = BeanUtil.copyProperties(request, DailyTrainTicket.class);
         DateTime now = DateTime.now();
@@ -182,7 +182,7 @@ public class DailyTrainTicketService {
                 .andStartEqualTo(start)
                 .andEndEqualTo(end);
         List<DailyTrainTicket> dailyTrainTickets = dailyTrainTicketMapper.selectByExample(example);
-        if (CollUtil.isNotEmpty(dailyTrainTickets)) {
+        if (CollUtil.isNotEmpty(dailyTrainTickets)){
             return dailyTrainTickets.getFirst();
         } else {
             return null;

@@ -25,3 +25,8 @@ Accept: application/json
 Content-Type: application/json
 
 ["0"]
+
+### 余票查询
+GET http://localhost:8082/ticket/list?page=2&size=20&keyword=
+Accept: application/json
+Content-Type: application/json
