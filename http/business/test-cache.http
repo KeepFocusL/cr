@@ -30,3 +30,9 @@ Content-Type: application/json
 GET http://localhost:8082/ticket/list?page=2&size=20&keyword=
 Accept: application/json
 Content-Type: application/json
+
+### Redis 测试 - set
+GET http://localhost:8082/test/redis/set/sb/qwerty
+
+### Redis 测试 - get
+GET http://localhost:8082/test/redis/get/sb
