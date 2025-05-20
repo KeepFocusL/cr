@@ -1,3 +1,27 @@
 ### 假设这是一个高频访问的接口(读多写少，比如余票查询)
 GET http://localhost:8082/admin/train/test-cache
 Accept: application/json
+
+### 新增车次
+POST http://localhost:8082/admin/train/save
+Accept: application/json
+Content-Type: application/json
+
+{
+  "id": 0,
+  "code": "G5116",
+  "type": "G",
+  "start": "厦门",
+  "startPinyin": "xiamen",
+  "startTime": "11:30:37",
+  "end": "福州",
+  "endPinyin": "fuzhou",
+  "endTime": "11:30:37"
+}
+
+### 删除车次
+DELETE http://localhost:8082/admin/train/delete
+Accept: application/json
+Content-Type: application/json
+
+["0"]
