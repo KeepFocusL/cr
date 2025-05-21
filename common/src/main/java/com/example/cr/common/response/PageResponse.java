@@ -1,8 +1,9 @@
 package com.example.cr.common.response;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PageResponse<T> {
+public class PageResponse<T> implements Serializable {
     // 总记录数
     private Long total;
 

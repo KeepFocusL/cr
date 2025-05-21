@@ -3,7 +3,9 @@ package com.example.cr.common.request;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
-public class PageRequest {
+import java.io.Serializable;
+
+public class PageRequest implements Serializable {
     @Min(value = 1, message = "当前页码不能小于1")
     private Integer page;
 

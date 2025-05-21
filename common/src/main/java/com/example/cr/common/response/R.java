@@ -2,7 +2,9 @@ package com.example.cr.common.response;
 
 import org.springframework.http.HttpStatus;
 
-public class R<T> {
+import java.io.Serializable;
+
+public class R<T> implements Serializable {
     /*
     类似 HTTP 状态码的作用
      */
