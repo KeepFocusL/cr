@@ -9,3 +9,27 @@ GET http://localhost:8082/admin/train/list?page=1&size=20&keyword=G
 
 ### 车站管理 - 关键词搜索
 GET http://localhost:8082/admin/station/list?page=1&size=20&keyword=厦门
+
+### 模拟购票
+POST http://localhost:8082/confirm-order/confirm
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "dailyTrainTicketId": "1921477848238002176",
+  "date": "2025-05-26",
+  "trainCode": "G5114",
+  "start": "厦门北",
+  "end": "福州南",
+  "tickets": [
+    {
+      "passengerId": "1915957156415410176",
+      "passengerName": "王五",
+      "passengerType": "1",
+      "passengerIdCard": "4564**********6456",
+      "seatTypeCode": "2",
+      "seat": "A1"
+    }
+  ]
+}
