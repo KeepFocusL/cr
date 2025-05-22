@@ -17,17 +17,17 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "dailyTrainTicketId": "1921477848238002176",
-  "date": "2025-05-26",
+  "dailyTrainTicketId": "1925358706195828736",
+  "date": "2025-06-06",
   "trainCode": "G5114",
-  "start": "厦门北",
-  "end": "福州南",
+  "start": "福州南",
+  "end": "福州",
   "tickets": [
     {
-      "passengerId": "1915957156415410176",
-      "passengerName": "王五",
+      "passengerId": "1925359441369239552",
+      "passengerName": "张三",
       "passengerType": "1",
-      "passengerIdCard": "4564**********6456",
+      "passengerIdCard": "2201**********1921",
       "seatTypeCode": "2",
       "seat": "A1"
     }
