@@ -43,7 +43,7 @@ public class DailyTrainTicketService {
     @Autowired
     DailyTrainSeatService dailyTrainSeatService;
 
-    @Cacheable("DailyTrainTicketService.list")
+//    @Cacheable("DailyTrainTicketService.list")
     public PageResponse<DailyTrainTicketResponse> list(DailyTrainTicketListRequest request) {
         DailyTrainTicketExample dailyTrainTicketExample = new DailyTrainTicketExample();
         dailyTrainTicketExample.setOrderByClause("id desc");
