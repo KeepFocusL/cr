@@ -107,7 +107,7 @@ public class ConfirmOrderService {
         return confirmOrderMapper.deleteByExample(confirmOrderExample);
     }
 
-    public void confirm(@Valid ConfirmOrderRequest request) {
+    public synchronized void confirm(@Valid ConfirmOrderRequest request) {
         // 业务数据校验【暂略】如：车次、余票是否存在；车次是否有效；tickets 条数是否大于 0；同乘客同车次的票是否已经买过了
 
         Date date = request.getDate();
