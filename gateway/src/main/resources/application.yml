@@ -34,7 +34,7 @@ spring:
             - Path=/b/**
           filters:
             - StripPrefix=1
-          uri: http://127.0.0.1:8082
+          uri: lb://business
         - id: scheduler
           predicates:
             - Path=/s/**
