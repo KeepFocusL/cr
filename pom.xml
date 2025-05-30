@@ -29,6 +29,7 @@
         <module>gateway</module>
         <module>business</module>
         <module>scheduler</module>
+        <module>cs</module>
     </modules>
     <scm>
         <connection/>
